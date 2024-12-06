@@ -14,13 +14,13 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #121212; /* Dark background */
-            color: #fff; /* White text for dark mode */
+            background-color: #121212;
+            color: #fff;
         }
         .login-container {
             width: 100%;
             max-width: 400px;
-            background: #1f1f1f; /* Dark container */
+            background: #1f1f1f;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -40,10 +40,6 @@
             box-shadow: none;
             border-color: #574bcd;
         }
-        /* Optional: Adjust the button for dark mode */
-        .btn-primary {
-            color: #fff;
-        }
         .form-label {
             color: #ccc;
         }
@@ -52,24 +48,34 @@
 <body>
     <div class="login-container">
         <h3 class="text-center mb-4">Login</h3>
-        <!-- Render the form using Jinja2 -->
-        <form method="POST" action="/login">
+        
+        <!-- Display error or success messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} mt-3">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Flask-WTF form -->
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}  <!-- Prevent CSRF attacks -->
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                {{ form.email(class="form-control") }} <!-- Jinja to render the email field -->
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                {{ form.password(class="form-control") }} <!-- Jinja to render the password field -->
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
             </div>
             <div class="mb-3 form-check">
-                {{ form.remember(class="form-check-input") }} <!-- Jinja to render the "Remember Me" checkbox -->
-                <label for="remember" class="form-check-label">Remember Me</label>
+                {{ form.remember(class="form-check-input") }}
+                {{ form.remember.label(class="form-check-label") }}
             </div>
-            <!-- Render the submit button with Jinja -->
-            <button type="submit" class="btn btn-primary w-100 py-2">
-                Login
-            </button>
+            <button type="submit" class="btn btn-primary w-100 py-2">{{ form.submit.label.text }}</button>
         </form>
     </div>
     <!-- Bootstrap JS -->
