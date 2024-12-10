@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-con = sqlite3.connect("biblio.db")
+con = sqlite3.connect("airplain.db")
 cursor = con.cursor()
 
 cursor.execute("""

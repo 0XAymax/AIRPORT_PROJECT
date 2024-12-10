@@ -61,7 +61,7 @@
         {% endwith %}
         
         <!-- Flask-WTF form -->
-        <form method="POST" action="{{ url_for('login') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}  <!-- Prevent CSRF attacks -->
             <div class="mb-3">
                 {{ form.email.label(class="form-label") }}
