@@ -5,7 +5,6 @@ import sqlite3
 # Define a blueprint for authentication routes
 auth_blueprint = Blueprint('auth', __name__)
 
-# Function to get the database connection
 def get_db_connection():
     conn = sqlite3.connect('airplain.db')
     conn.row_factory = sqlite3.Row

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Aircraft Details</h1>
+        <form method="GET" action="{{ url_for('aircraft_routes.search_aircraft_by_type') }}" class="search-form">
+            <label for="aircraft_type">Search by Aircraft Type:</label>
+            <input type="text" id="aircraft_type" name="aircraft_type" class="form-control" placeholder="Enter aircraft type">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </header>
+
+    <!-- Aircraft Information Section -->
+    {% if aircraft %}
+    <section class="aircraft-info card fade-in">
+        <h3>Aircraft #{{ aircraft.NUMAV }}</h3>
+        <table>
+            <tr>
+                <th>Type</th>
+                <td>{{ aircraft.TYPE }}</td>
+            </tr>
+            <tr>
+                <th>Maintenance Start Date</th>
+                <td>{{ datems if datems else 'Not available' }}</td>
+            </tr>
+            <tr>
+                <th>Hours Dedicated to Revision</th>
+                <td>{{ nbhddrev if nbhddrev else 'Not available' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ status if status else 'Not available' }}</td>
+            </tr>
+        </table>
+        <div class="actions">
+            <a href="{{ url_for('aircraft_routes.get_aircraft_status', numav=aircraft.NUMAV) }}" class="btn-info">Get Status</a>
+            <a href="{{ url_for('aircraft_routes.get_aircraft_nbhddrev', numav=aircraft.NUMAV) }}" class="btn-info">Get NBHDDREV</a>
+            <a href="{{ url_for('aircraft_routes.get_aircraft_datems', numav=aircraft.NUMAV) }}" class="btn-info">Get Maintenance Start Date</a>
+        </div>
+    </section>
+    {% elif search_results %}
+    <!-- Search Results Section -->
+    <section class="search-results">
+        <h3>Search Results</h3>
+        <table>
+            <tr>
+                <th>NUMAV</th>
+                <th>Type</th>
+                <th>Maintenance Start Date</th>
+                <th>Hours Dedicated to Revision</th>
+                <th>Status</th>
+            </tr>
+            {% for aircraft in search_results %}
+            <tr>
+                <td>{{ aircraft.NUMAV }}</td>
+                <td>{{ aircraft.TYPE }}</td>
+                <td>{{ aircraft.DATEMS }}</td>
+                <td>{{ aircraft.NBHDDREV }}</td>
+                <td>{{ aircraft.STATUS }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    {% else %}
+    <!-- No Data Found -->
+    <section>
+        <p>No aircraft found. Try searching by aircraft type.</p>
+    </section>
+    {% endif %}
+
+</body>
+
+</html>
