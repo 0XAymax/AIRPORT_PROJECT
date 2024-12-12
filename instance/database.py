@@ -24,12 +24,12 @@ cursor.execute("""
     password TEXT NOT NULL,                      
     tel INTEGER,
     ville TEXT NOT NULL,
-    adresse TEXT NOT NULL,
+    adresse TEXT NO T NULL,
     salaire FLOAT NOT NULL,
     FONCTION TEXT NOT NULL,
     datemb DATE NOT NULL,
-    NBMHV INTEGER DEFAULT 0,
-    NBTHV INTEGER DEFAULT 0
+    NBMHV INTEGER DEFAULT -1,
+    NBTHV INTEGER DEFAULT -1
 )
 """)
 
