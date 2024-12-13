@@ -90,3 +90,53 @@ class Vol:
             return rows
         return None
     
+    def get_crew_by_flight_id(numvol):
+        conn = Vol.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT NUMEMP FROM employee_vol WHERE NUMVOL=? ",(numvol,))
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None
+    
+    def add_crew_member(self,NUMEMP,NUMVOL):
+        conn = Vol.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""INSERT INTO employee_vol(NUMEMP,NUMVOL) VALUES(?,?)""",(NUMEMP,NUMVOL))
+        conn.commit()
+        conn.close()
+
+    def create_vol(departure_airport, arrival_airport, departure_time,
+               flight_duration, day_of_week, aircraft_id=None): 
+        conn = Vol.get_db_connection()
+        cursor = conn.cursor()
+        valid_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        if day_of_week not in valid_days:
+            raise ValueError(f"Invalid day. Must be one of {valid_days}")
+        
+        if aircraft_id is not None:
+            cursor.execute("""
+            INSERT INTO vol (APORTDEP, APORTARR, HDEP, durvol, jvol, NUMVOL) 
+            VALUES (?, ?, ?, ?, ?, ?)
+            """, (departure_airport, arrival_airport, departure_time,
+                  flight_duration, day_of_week, aircraft_id))
+            conn.commit()
+            conn.close()
+
+        else:
+            cursor.execute("""
+            INSERT INTO vol (APORTDEP, APORTARR, HDEP, durvol, jvol) 
+            VALUES (?, ?, ?, ?, ?)
+            """, (departure_airport, arrival_airport, departure_time,
+                  flight_duration, day_of_week))
+            conn.commit()
+            conn.close()
+    
+    def delete_vol(nomvol):
+        conn = Vol.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM vol WHERE NUMVOL=?",(nomvol,))
+        conn.commit()
+        conn.close()
+        

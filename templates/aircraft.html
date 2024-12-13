@@ -1,83 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+    <title>Aircraft Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1, h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        nav {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin-right: 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .details-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .action-links a {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .action-links a:hover {
+            background-color: #0056b3;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-
 <body>
+    <h1>Aircraft Management</h1>
+    <nav>
+        <a href="{{ url_for('aircraft_routes.aircraft', action='list') }}">List Aircrafts</a>
+        <a href="{{ url_for('aircraft_routes.aircraft', action='search') }}">Search Aircraft</a>
+    </nav>
 
-    <!-- Header Section -->
-    <header class="header">
-        <h1>Aircraft Details</h1>
-        <form method="GET" action="{{ url_for('aircraft_routes.search_aircraft_by_type') }}" class="search-form">
-            <label for="aircraft_type">Search by Aircraft Type:</label>
-            <input type="text" id="aircraft_type" name="aircraft_type" class="form-control" placeholder="Enter aircraft type">
-            <button type="submit" class="btn-search">Search</button>
+    {% if context.view == "list" %}
+        <h2>Aircraft List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Aircraft Type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aircraft in context.aircrafts %}
+                    <tr>
+                        <td>{{ aircraft['NUMAV'] }}</td>
+                        <td>{{ aircraft['TYPE'] }}</td>
+                        <td>
+                            <a href="{{ url_for('aircraft_routes.aircraft', action='details', id=aircraft['NUMAV']) }}">View Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% elif context.view == "details" %}
+        <h2>Aircraft Details</h2>
+        {% if context.aircraft %}
+            <div class="details-card">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ context.aircraft.NUMAV }}</td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>{{ context.aircraft.TYPE }}</td>
+                    </tr>
+                    <tr>
+                        <th>DATEMS</th>
+                        <td>{{ context.aircraft.DATEMS }}</td>
+                    </tr>
+                    <tr>
+                        <th>NBHDDREV</th>
+                        <td>{{ context.aircraft.NBHDDREV }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ context.aircraft.STATUS }}</td>
+                    </tr>
+                </table>
+                <div class="action-links">
+                    <a href="{{ url_for('aircraft_routes.aircraft', action='status', id=context.aircraft.NUMAV) }}">View Status</a>
+                    <a href="{{ url_for('aircraft_routes.aircraft', action='nbhddrev', id=context.aircraft.NUMAV) }}">View NBHDDREV</a>
+                    <a href="{{ url_for('aircraft_routes.aircraft', action='datems', id=context.aircraft.NUMAV) }}">View DATEMS</a>
+                </div>
+            </div>
+        {% else %}
+            <p>Aircraft not found.</p>
+        {% endif %}
+
+    {% elif context.view == "status" %}
+        <h2>Aircraft Status</h2>
+        {% if context.status %}
+            <div class="details-card">
+                <table>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ context.status }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            <p>Status not found.</p>
+        {% endif %}
+
+    {% elif context.view == "search" %}
+        <h2>Search Aircraft</h2>
+        <form method="POST">
+            <label for="name">Aircraft Name:</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">Search</button>
         </form>
-    </header>
+        {% if context.aircrafts %}
+            <h3>Search Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Aircraft Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aircraft in context.aircrafts %}
+                        <tr>
+                            <td>{{ aircraft['NUMAV'] }}</td>
+                            <td>{{ aircraft['TYPE'] }}</td>
+                            <td>
+                                <a href="{{ url_for('aircraft_routes.aircraft', action='details', id=aircraft['NUMAV']) }}">View Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif request.method == "POST" %}
+            <p>No aircrafts found with that name.</p>
+        {% endif %}
 
-    <!-- Aircraft Information Section -->
-    {% if aircraft %}
-    <section class="aircraft-info card fade-in">
-        <h3>Aircraft #{{ aircraft.NUMAV }}</h3>
-        <table>
-            <tr>
-                <th>Type</th>
-                <td>{{ aircraft.TYPE }}</td>
-            </tr>
-            <tr>
-                <th>Maintenance Start Date</th>
-                <td>{{ datems if datems else 'Not available' }}</td>
-            </tr>
-            <tr>
-                <th>Hours Dedicated to Revision</th>
-                <td>{{ nbhddrev if nbhddrev else 'Not available' }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ status if status else 'Not available' }}</td>
-            </tr>
-        </table>
-        <div class="actions">
-            <a href="{{ url_for('aircraft_routes.get_aircraft_status', numav=aircraft.NUMAV) }}" class="btn-info">Get Status</a>
-            <a href="{{ url_for('aircraft_routes.get_aircraft_nbhddrev', numav=aircraft.NUMAV) }}" class="btn-info">Get NBHDDREV</a>
-            <a href="{{ url_for('aircraft_routes.get_aircraft_datems', numav=aircraft.NUMAV) }}" class="btn-info">Get Maintenance Start Date</a>
-        </div>
-    </section>
-    {% elif search_results %}
-    <!-- Search Results Section -->
-    <section class="search-results">
-        <h3>Search Results</h3>
-        <table>
-            <tr>
-                <th>NUMAV</th>
-                <th>Type</th>
-                <th>Maintenance Start Date</th>
-                <th>Hours Dedicated to Revision</th>
-                <th>Status</th>
-            </tr>
-            {% for aircraft in search_results %}
-            <tr>
-                <td>{{ aircraft.NUMAV }}</td>
-                <td>{{ aircraft.TYPE }}</td>
-                <td>{{ aircraft.DATEMS }}</td>
-                <td>{{ aircraft.NBHDDREV }}</td>
-                <td>{{ aircraft.STATUS }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </section>
-    {% else %}
-    <!-- No Data Found -->
-    <section>
-        <p>No aircraft found. Try searching by aircraft type.</p>
-    </section>
+    {% elif context.view == "nbhddrev" %}
+        <h2>Aircraft NBHDDREV</h2>
+        {% if context.nbhddrev %}
+            <div class="details-card">
+                <table>
+                    <tr>
+                        <th>NBHDDREV</th>
+                        <td>{{ context.nbhddrev }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            <p>NBHDDREV not found.</p>
+        {% endif %}
+
+    {% elif context.view == "datems" %}
+        <h2>Aircraft DATEMS</h2>
+        {% if context.datems %}
+            <div class="details-card">
+                <table>
+                    <tr>
+                        <th>DATEMS</th>
+                        <td>{{ context.datems }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            <p>DATEMS not found.</p>
+        {% endif %}
     {% endif %}
-
 </body>
-
 </html>

@@ -47,3 +47,31 @@ class Escale:
         if row:
             return row["HARRESC"]
         return None
+    
+    @staticmethod
+    def get_escale_by_airport(APORTESC):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT * FROM escale WHERE APORTESC = ?",(APORTESC,))
+        row = cursor.fetchall()
+        conn.close()
+        if row:
+            return row
+        return None
+    
+    def create_escale(airport_code, arrival_time, stop_duration, flight_number, stop_order):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("""
+        INSERT INTO escale (APORTESC, HARMESC, DURESC, NOORD, NUMVOL) 
+        VALUES (?, ?, ?, ?, ?)
+        """, (airport_code, arrival_time, stop_duration, stop_order, flight_number))
+        conn.commit()
+        conn.close()
+
+    def delete_escale(idesc):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("DELETE FROM escale WHERE IDESC = ?", (idesc,))
+        conn.commit()
+        conn.close()

@@ -57,6 +57,18 @@ class Airport:
             return row["VILLE"]
         return None
         
+    def create_airport(code, name, country, city):
+        conn=Airport.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("INSERT INTO airport (CODEV, NOM, Pays, VILLE) VALUES ( ?,?,?,?)",(code,name,country,city))
+        conn.commit()
+        conn.close()
 
-
+    def delete_airport(codev):
+        conn=Airport.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("DELETE FROM airport WHERE CODEV = ?",(codev,))
+        conn.commit()
+        conn.close()
+        
     

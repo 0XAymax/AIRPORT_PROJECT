@@ -3,38 +3,33 @@ from models.aircraft import Aircraft
 
 aircraft_routes = Blueprint('aircraft_routes', __name__)
 
-@aircraft_routes.route('/aircraft/<int:numav>', methods=['GET'])
+@aircraft_routes.route("/aircraft", methods=["GET", "POST"])
+def aircraft():
+    action = request.args.get("action", "list")
+    aircraft_id = request.args.get("id", type=int)
+    name = request.form.get("name", "")
+    context = {}
 
-def get_aircraft(numav):
-    aircraft = Aircraft.get_by_id(numav)
-    if aircraft:
-        return render_template('aircraft.html', aircraft=aircraft, search_results=None)
-    return render_template('aircraft.html', aircraft=None, search_results=None)
+    if action == "list":
+        context["aircrafts"] = Aircraft.get_all_aircrafts()
+        context["view"] = "list"
+    elif action == "details" and aircraft_id:
+        context["aircraft"] = Aircraft.get_by_id(aircraft_id)
+        context["view"] = "details"
+    elif action == "status" and aircraft_id:
+        context["status"] = Aircraft.get_status(aircraft_id)
+        context["view"] = "status"
+    elif action == "search":
+        if request.method == "POST":
+            context["aircrafts"] = Aircraft.get_by_name(name)
+        context["view"] = "search"
+    elif action == "nbhddrev" and aircraft_id:
+        context["nbhddrev"] = Aircraft.get_nbhddrev(aircraft_id)
+        context["view"] = "nbhddrev"
+    elif action == "datems" and aircraft_id:
+        context["datems"] = Aircraft.get_datems(aircraft_id)
+        context["view"] = "datems"
 
-@aircraft_routes.route('/aircraft/search', methods=['GET'])
+    return render_template("aircraft.html", context=context)
 
-def search_aircraft_by_type():
-    name = request.args.get('aircraft_type')
-    if name:
-        search_results = Aircraft.get_by_name(name)
-        return render_template('aircraft.html', aircraft=None, search_results=search_results)
-    return render_template('aircraft.html', aircraft=None, search_results=[])
-
-@aircraft_routes.route('/aircraft/<int:numav>/status', methods=['GET'])
-def get_aircraft_status(numav):
-    status = Aircraft.get_status(numav)
-    aircraft = Aircraft.get_by_id(numav)
-    return render_template('aircraft.html', aircraft=aircraft, search_results=None, status=status, nbhddrev=None, datems=None)
-
-@aircraft_routes.route('/aircraft/<int:numav>/nbhddrev', methods=['GET'])
-def get_aircraft_nbhddrev(numav):
-    nbhddrev = Aircraft.get_nbhddrev(numav)
-    aircraft = Aircraft.get_by_id(numav)
-    return render_template('aircraft.html', aircraft=aircraft, search_results=None, status=None, nbhddrev=nbhddrev, datems=None)
-
-@aircraft_routes.route('/aircraft/<int:numav>/datems', methods=['GET'])
-def get_aircraft_datems(numav):
-    datems = Aircraft.get_datems(numav)
-    aircraft = Aircraft.get_by_id(numav)
-    return render_template('aircraft.html', aircraft=aircraft, search_results=None, status=None, nbhddrev=None, datems=datems)
 

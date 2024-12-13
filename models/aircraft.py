@@ -68,3 +68,13 @@ class Aircraft:
         if row:
             return row[0]
         return None
+    
+    def get_all_aircrafts():
+        conn=Aircraft.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT *FROM aircraft ")
+        row=cursor.fetchall()
+        conn.close()
+        if row:
+            return row
+        return None
