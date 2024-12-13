@@ -17,11 +17,11 @@ class Airport:
     def get_airport_by_name(nom):
         conn=Airport.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM airport WHERE NAME = ?",(nom,))
-        row=cursor.fetchone()
+        cursor.execute("SELECT * FROM airport WHERE NOM = ?",(nom,))
+        row=cursor.fetchall()
         conn.close()
         if row:
-            return Airport(row["CODEV"],row["NOM"],row["Pays"],row["VILLE"])
+            return row
         return None
     
     @staticmethod
@@ -71,4 +71,16 @@ class Airport:
         conn.commit()
         conn.close()
         
-    
+    def update_airport(codev,new_name,new_pays,new_city):
+        conn=Airport.get_db_connection()
+        cursor=conn.cursor()
+        if new_name:
+            cursor.execute("UPDATE airport SET NOM =? WHERE CODEV =?",(new_name,codev))
+        if new_pays:
+            cursor.execute("UPDATE airport SET Pays =? WHERE CODEV =?",(new_pays,codev))
+        if new_city:
+            cursor.execute("UPDATE airport SET VILLE =? WHERE CODEV =?",(new_city,codev))
+
+        conn.commit()
+        conn.close()    
+
