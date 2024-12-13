@@ -5,67 +5,55 @@ cursor = con.cursor()
 
 cursor.execute("""
     INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
-    VALUES (1, 'Boeing 747', '2020-01-15', 500, 'Available')
+    VALUES (3, 'Cessna 172', '2019-11-05', 3000, 'Available')
 """)
 cursor.execute("""
     INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
-    VALUES (2, 'Airbus A320', '2021-06-20', 200, 'In Maintenance')
-""")
-
-# Insert data into employees
-cursor.execute("""
-    INSERT INTO employees (NUMEMP, NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
-    VALUES (1, 'Smith', 'John', 'john.smith@example.com', 'password123', 1234567890, 'New York', '123 Street A', 75000, 'Technician', '2018-05-10')
+    VALUES (4, 'Boeing 747', '2017-01-22', 2200, 'Available')
 """)
 cursor.execute("""
-    INSERT INTO employees (NUMEMP, NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
-    VALUES (2, 'Doe', 'Jane', 'jane.doe@example.com', 'securepass', 9876543210, 'Los Angeles', '456 Avenue B', 80000, 'Pilot', '2017-09-25')
-""")
-
-# Insert data into airport
-cursor.execute("""
-    INSERT INTO airport (CODEV, NOM, Pays, VILLE)
-    VALUES ('JFK', 'John F. Kennedy International', 'USA', 'New York')
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (5, 'Airbus A380', '2022-03-18', 50, 'Available')
 """)
 cursor.execute("""
-    INSERT INTO airport (CODEV, NOM, Pays, VILLE)
-    VALUES ('LAX', 'Los Angeles International', 'USA', 'Los Angeles')
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (6, 'Bombardier CRJ700', '2015-09-12', 4200, 'Available')
 """)
 cursor.execute("""
-    INSERT INTO airport (CODEV, NOM, Pays, VILLE)
-    VALUES ('LHR', 'London Heathrow', 'UK', 'London')
-""")
-
-# Insert data into vol
-cursor.execute("""
-    INSERT INTO vol (NUMVOL, APORTDEP, APORTARR, HDEP, durvol, jvol)
-    VALUES (101, 'JFK', 'LAX', '08:00:00', 360, 'Monday')
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (7, 'Embraer E190', '2021-07-30', 300, 'Available')
 """)
 cursor.execute("""
-    INSERT INTO vol (NUMVOL, APORTDEP, APORTARR, HDEP, durvol, jvol)
-    VALUES (102, 'LAX', 'LHR', '12:30:00', 600, 'Tuesday')
-""")
-
-# Insert data into escale
-cursor.execute("""
-    INSERT INTO escale (IDESC, APORTESC, HARMESC, DURESC, NOORD, NUMVOL)
-    VALUES (1, 'LHR', '14:00:00', '01:30:00', 1, 102)
-""")
-
-# Insert data into revision
-cursor.execute("""
-    INSERT INTO revision (NUMREV, RAPPPORT, DATEREV, NBHREV, NUMAV, TECID)
-    VALUES (1, 'Routine maintenance completed.', '2023-10-12', 4, 1, 1)
-""")
-
-# Insert data into employee_vol (many-to-many relationship)
-cursor.execute("""
-    INSERT INTO employee_vol (NUMEMP, NUMVOL)
-    VALUES (2, 101)
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (8, 'Boeing 777', '2016-12-25', 1800, 'Available')
 """)
 cursor.execute("""
-    INSERT INTO employee_vol (NUMEMP, NUMVOL)
-    VALUES (2, 102)
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (9, 'Concorde', '2000-08-14', 5200, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (10, 'Boeing 767', '2019-02-28', 1300, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (11, 'Lockheed L-1011 TriStar', '1995-04-10', 7000, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (12, 'McDonnell Douglas MD-80', '2010-06-15', 4600, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (13, 'ATR 72', '2021-01-01', 100, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (14, 'Boeing 787 Dreamliner', '2023-02-20', 20, 'Available')
+""")
+cursor.execute("""
+    INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+    VALUES (15, 'Airbus A330', '2018-11-09', 1600, 'Available')
 """)
 
 # Commit changes and close the connection

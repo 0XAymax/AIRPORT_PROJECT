@@ -78,3 +78,40 @@ class Aircraft:
         if row:
             return row
         return None
+    
+    def create_aircraft(numav, aircraft_type, datems, nbhddrev, status):
+        conn = Aircraft.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
+            VALUES (?, ?, ?, ?, ?)""",
+            (numav, aircraft_type, datems, nbhddrev, status))
+        conn.commit()
+        conn.close()
+    
+    def update_aircraft(numav, aircraft_type=None, datems=None, nbhddrev=None, status=None):
+        conn = Aircraft.get_db_connection()
+        cursor = conn.cursor()
+
+        if aircraft_type:
+            cursor.execute("UPDATE aircraft SET TYPE = ? WHERE NUMAV = ?", (aircraft_type, numav))
+        
+        if datems:
+            cursor.execute("UPDATE aircraft SET datems = ? WHERE NUMAV = ?", (datems, numav))
+        
+        if nbhddrev:
+            cursor.execute("UPDATE aircraft SET NBHDDREV = ? WHERE NUMAV = ?", (nbhddrev, numav))
+        
+        if status:
+            cursor.execute("UPDATE aircraft SET status = ? WHERE NUMAV = ?", (status, numav))
+        
+        conn.commit()
+        conn.close()
+
+    
+    def delete_aircraft(numav):
+        conn = Aircraft.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM aircraft WHERE NUMAV = ?", (numav,))
+        conn.commit()
+        conn.close()
