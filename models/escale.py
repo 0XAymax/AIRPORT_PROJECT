@@ -16,10 +16,10 @@ class Escale:
         return conn
     
     @staticmethod
-    def get_all_escale(idesc):
+    def get_all_escale():
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM escale WHERE IDESC=?",(idesc,))
+        cursor.execute("SELECT * FROM escale ")
         row = cursor.fetchall()
         conn.close()
         if row:
@@ -59,11 +59,11 @@ class Escale:
             return row
         return None
     
-    def create_escale(airport_code, arrival_time, stop_duration, flight_number, stop_order):
+    def create_escale(airport_code, arrival_time, stop_duration, stop_order,flight_number):
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("""
-        INSERT INTO escale (APORTESC, HARMESC, DURESC, NOORD, NUMVOL) 
+        INSERT INTO escale (APORTESC, HARRESC, DURESC, NOORD, NUMVOL) 
         VALUES (?, ?, ?, ?, ?)
         """, (airport_code, arrival_time, stop_duration, stop_order, flight_number))
         conn.commit()
@@ -75,3 +75,28 @@ class Escale:
         cursor.execute("DELETE FROM escale WHERE IDESC = ?", (idesc,))
         conn.commit()
         conn.close()
+
+    @staticmethod
+    def get_escale_by_id(idesc):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT * FROM escale WHERE IDESC =?",(idesc,))
+        row=cursor.fetchone()
+        if row:
+            return row
+        return None
+    
+    def update_escale(idesc,aportesc,harresc,duresc,noord):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        if aportesc:
+            cursor.execute("UPDATE escale SET APORTESC = ? WHERE IDESC = ?", (aportesc,idesc))
+        if harresc:
+            cursor.execute("UPDATE escale SET HARRESC = ? WHERE IDESC = ?", (harresc,idesc))
+        if duresc:
+            cursor.execute("UPDATE escale SET DURESC = ? WHERE IDESC = ?", (duresc,idesc))
+        if noord:
+            cursor.execute("UPDATE escale SET NOORD = ? WHERE IDESC = ?", (noord, idesc))
+
+        conn.commit()
+        conn.close()    

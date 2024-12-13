@@ -28,13 +28,13 @@ def login():
 
         if user:
             flash('Login successful!', 'success')
-            return redirect(url_for('auth.dashboard')) 
+            return redirect(url_for('auth.home')) 
         else:
             flash('Invalid email or password. Please try again.', 'danger')
 
     return render_template('login.html', title='Login', form=form)
 
 # Dashboard route
-@auth_blueprint.route('/dashboard')
-def dashboard():
-    return "<h1>Welcome to the dashboard!</h1>"
+@auth_blueprint.route('/home')
+def home():
+    return render_template("home.html")

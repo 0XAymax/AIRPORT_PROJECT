@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escale Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        a {
+            color: #9acd32;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Escale Management</h1>
+
+        <!-- List View -->
+        {% if context.view == "list" %}
+            <h2>All Escales</h2>
+            <table class="table table-dark table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Airport Code</th>
+                        <th>Arrival Time</th>
+                        <th>Duration</th>
+                        <th>Stop Order</th>
+                        <th>Flight Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for escale in context.escales %}
+                        <tr>
+                            <td>{{ escale.IDESC }}</td>
+                            <td>{{ escale.APORTESC }}</td>
+                            <td>{{ escale.HARRESC }}</td>
+                            <td>{{ escale.DURESC }}</td>
+                            <td>{{ escale.NOORD }}</td>
+                            <td>{{ escale.NUMVOL }}</td>
+                            <td>
+                                <a href="?action=details&id={{ escale.IDESC }}" class="btn btn-sm btn-outline-info">Details</a>
+                                <a href="?action=update&id={{ escale.IDESC }}" class="btn btn-sm btn-outline-warning">Update</a>
+                                <form action="?action=delete&id={{ escale.IDESC }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="?action=create" class="btn btn-outline-success">Create New Escale</a>
+        {% endif %}
+
+        <!-- Details View -->
+        {% if context.view == "details" %}
+            <h2>Escale Details</h2>
+            {% if context.escale %}
+                <div class="card bg-dark text-light mb-3">
+                    <div class="card-body">
+                        <p><strong>ID:</strong> {{ context.escale.IDESC }}</p>
+                        <p><strong>Airport Code:</strong> {{ context.escale.APORTESC }}</p>
+                        <p><strong>Arrival Time:</strong> {{ context.escale.HARRESC }}</p>
+                        <p><strong>Duration:</strong> {{ context.escale.DURESC }}</p>
+                        <p><strong>Stop Order:</strong> {{ context.escale.NOORD }}</p>
+                        <p><strong>Flight Number:</strong> {{ context.escale.NUMVOL }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">Escale not found.</div>
+            {% endif %}
+            <a href="?action=list" class="btn btn-outline-secondary">Back to List</a>
+        {% endif %}
+
+        <!-- Search View -->
+        {% if context.view == "search" %}
+            <h2>Search Escales</h2>
+            <form method="POST" action="?action=search" class="mb-3">
+                <div class="mb-3">
+                    <label for="NUMVOL" class="form-label">Flight Number</label>
+                    <input type="text" id="NUMVOL" name="NUMVOL" class="form-control" placeholder="Enter Flight Number">
+                </div>
+                <div class="mb-3">
+                    <label for="CODEV" class="form-label">Airport Code</label>
+                    <input type="text" id="CODEV" name="CODEV" class="form-control" placeholder="Enter Airport Code">
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+            {% if context.escales %}
+                <h3>Search Results:</h3>
+                <ul class="list-group">
+                    {% for escale in context.escales %}
+                        <li class="list-group-item bg-dark text-light">
+                            <strong>ID:</strong> {{ escale.IDESC }},
+                            <strong>Airport Code:</strong> {{ escale.APORTESC }},
+                            <strong>Arrival Time:</strong> {{ escale.HARRESC }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% elif context.message %}
+                <div class="alert alert-warning">{{ context.message }}</div>
+            {% endif %}
+            <a href="?action=list" class="btn btn-outline-secondary mt-3">Back to List</a>
+        {% endif %}
+
+        <!-- Arrival Time View -->
+        {% if context.view == "arrival_time" %}
+            <h2>Arrival Time</h2>
+            {% if context.arrival_time %}
+                <div class="alert alert-success">Arrival Time: {{ context.arrival_time }}</div>
+            {% else %}
+                <div class="alert alert-warning">{{ context.message }}</div>
+            {% endif %}
+            <a href="?action=list" class="btn btn-outline-secondary">Back to List</a>
+        {% endif %}
+
+        <!-- Create View -->
+        {% if context.view == "create" %}
+            <h2>Create New Escale</h2>
+            {% if context.error %}
+                <div class="alert alert-danger">{{ context.error }}</div>
+            {% endif %}
+            <form method="POST" action="?action=create">
+                <div class="mb-3">
+                    <label for="APORTESC" class="form-label">Airport Code</label>
+                    <input type="text" id="APORTESC" name="APORTESC" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="HARRESC" class="form-label">Arrival Time</label>
+                    <input type="text" id="HARRESC" name="HARRESC" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="DURESC" class="form-label">Duration</label>
+                    <input type="text" id="DURESC" name="DURESC" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="NOORD" class="form-label">Stop Order</label>
+                    <input type="text" id="NOORD" name="NOORD" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="NUMVOL" class="form-label">Flight Number</label>
+                    <input type="text" id="NUMVOL" name="NUMVOL" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-outline-success">Create</button>
+            </form>
+            <a href="?action=list" class="btn btn-outline-secondary mt-3">Back to List</a>
+        {% endif %}
+
+        <!-- Update View -->
+        {% if context.view == "update" %}
+            <h2>Update Escale</h2>
+            <form method="POST" action="?action=update&id={{ context.escale.IDESC }}">
+                <div class="mb-3">
+                    <label for="aportesc" class="form-label">Airport Code</label>
+                    <input type="text" id="aportesc" name="aportesc" value="{{ context.escale.APORTESC }}" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="harresc" class="form-label">Arrival Time</label>
+                    <input type="text" id="harresc" name="harresc" value="{{ context.escale.HARRESC }}" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="duresc" class="form-label">Duration</label>
+                    <input type="text" id="duresc" name="duresc" value="{{ context.escale.DURESC }}" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="noord" class="form-label">Stop Order</label>
+                    <input type="text" id="noord" name="noord" value="{{ context.escale.NOORD }}" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-outline-warning">Update</button>
+            </form>
+            <a href="?action=list" class="btn btn-outline-secondary mt-3">Back to List</a>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
