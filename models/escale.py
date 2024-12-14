@@ -33,9 +33,7 @@ class Escale:
         cursor.execute("SELECT * FROM escale WHERE NUMVOL=?",(numvol,))
         row = cursor.fetchone()
         conn.close()
-        if row:
-            return row
-        return None
+        return row
     
     @staticmethod
     def get_heure_arrive(idesc):
@@ -55,9 +53,7 @@ class Escale:
         cursor.execute("SELECT * FROM escale WHERE APORTESC = ?",(APORTESC,))
         row = cursor.fetchall()
         conn.close()
-        if row:
-            return row
-        return None
+        return row
     
     def create_escale(airport_code, arrival_time, stop_duration, stop_order,flight_number):
         conn=Escale.get_db_connection()

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Crew Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .details-card, form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .action-links a, button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .action-links a:hover, button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+      
+        }
+
+        button.delete {
+            background-color: #dc3545;
+        }
+
+        button.delete:hover {
+            background-color: #c82333;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h1>Crew Management</h1>
+      <div>
+        <a href="{{ url_for('crew_routes.crew', action='list') }}">Home</a>
+        <a href="{{ url_for('crew_routes.crew', action='create') }}">Add Crew Member</a>
+      </div>
+    </nav>
+
+    {% if context.view == "crew_list" %}
+    <h2>All Crew Members</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Flight ID</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for crew_member in context.crew %}
+        <tr>
+          <td>{{ crew_member.NUMEMP }}</td>
+          <td>{{ crew_member.NUMVOL }}</td>
+          <td>
+            <div class="action-links">
+              <a href="{{ url_for('crew_routes.crew', action='details', id=crew_member['NUMEMP']) }}">View</a>
+              <a href="{{ url_for('crew_routes.crew', action='update', id=crew_member['NUMEMP']) }}">Edit</a>
+              <form method="POST" action="{{ url_for('crew_routes.crew', action='delete', id=crew_member['NUMEMP']) }}" style="display:inline;">
+                <button class="delete" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% elif context.view == "create" %}
+    <h2>Add Crew Member</h2>
+    <form method="POST">
+      <label for="flight_id">Flight ID:</label>
+      <input type="text" id="flight_id" name="flight_id" required />
+      <label for="crew_id">Crew ID:</label>
+      <input type="text" id="crew_id2" name="crew_id" required />
+      <button type="submit">Add Crew Member</button>
+    </form>
+
+    {% elif context.view == "update" %}
+    <h2>Edit Crew Member</h2>
+    <form method="POST">
+      <label for="new_id">New ID:</label>
+      <input type="text" id="new_id" name="new_id" value="{{ context.crew_member.NUMEMP }}" required />
+      <button type="submit">Update</button>
+    </form>
+
+    {% elif context.view == "details" %}
+    <h2>Crew Member Details</h2>
+    <div class="details-card">
+      <table>
+        <tr><th>ID</th><td>{{ context["crew_member"][0][0] }}</td></tr>
+        <tr><th>Flight ID</th><td>{{ context["crew_member"][0][1] }}</td></tr>
+      </table>
+      <div class="action-links">
+        <a href="{{ url_for('crew_routes.crew', action='update', id=context['crew_member'][0][0]) }}">Edit</a>
+        <form method="POST" action="{{ url_for('crew_routes.crew', action='delete', id=context['crew_member'][0][0]) }}" style="display:inline;">
+          <button class="delete" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+  </body>
+</html>

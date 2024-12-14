@@ -3,69 +3,72 @@ from models.escale import Escale
 
 escale_routes=Blueprint("escale_routes",__name__)
 
-@escale_routes.route("/escale",methods=["GET" ,"POST"])
+@escale_routes.route("/escale", methods=["GET", "POST"])
 def escale():
-    action=request.args.get("action","list")
-    idesc=request.args.get("id" ,type=int)
-    codev=request.form.get("CODEV" ,"")
-    numvol = request.form.get("NUMVOL", "")
-    context ={}
+    context = {
+        "escales": Escale.get_all_escale(),
+        "message": "",
+    }
 
-    if action == "list":
-        context["escales"]=Escale.get_all_escale()
-        context["view"]="list"
-    elif action == "details" and idesc:
-        context["escale"] = Escale.get_escale_by_id(idesc)
-        context["view"] = "details"
-    elif action == "search":
-        if request.method == "POST":
-            escales_by_numvol = Escale.get_escale_by_numvol(numvol) if numvol else None
-            escales_by_airport = Escale.get_escale_by_airport(codev) if codev else None
-            
-            context["escales"] = []
-            if escales_by_numvol:
-               context["escales"].extend(escales_by_numvol if isinstance(escales_by_numvol, list) else [escales_by_numvol])
-            if escales_by_airport:
-               context["escales"].extend(escales_by_airport if isinstance(escales_by_airport, list) else [escales_by_airport])
-            if not context["escales"]:
-              context["message"] = "No escales found for the given criteria."
+    if request.method == "POST":
+        action = request.form.get("action")
 
-        context["view"] = "search"
-    elif action == "arrival_time" and idesc:
-        arrival_time = Escale.get_heure_arrive(idesc)
-        if arrival_time:
-           context["arrival_time"] = arrival_time
-        else:
-           context["message"] = "No arrival time found for the specified escale."
-        context["view"] = "arrival_time"    
-    elif action == "create":
-        context["view"] = "create"
-        if request.method == "POST":
+        if action == "create":
+            # Handle create escale
             airport_code = request.form.get("APORTESC")
             arrival_time = request.form.get("HARRESC")
             stop_duration = request.form.get("DURESC")
             stop_order = request.form.get("NOORD")
             flight_number = request.form.get("NUMVOL")
 
-            if not airport_code or not arrival_time or not stop_duration or not stop_order or not flight_number:
-                context["error"] = "All fields are required!"
-                return render_template("escale.html", context=context)
+            if not all([airport_code, arrival_time, stop_duration, stop_order, flight_number]):
+                context["message"] = "All fields are required to create an escale!"
+            else:
+                Escale.create_escale(airport_code, arrival_time, stop_duration, stop_order, flight_number)
+                context["message"] = "Escale created successfully!"
+        
+        elif action == "search":
+            # Handle search escale
+            codev = request.form.get("CODEV")
+            numvol = request.form.get("NUMVOL")
+            search_results = []
 
-            Escale.create_escale(airport_code, arrival_time, stop_duration, stop_order, flight_number)
-            return redirect(url_for('escale_routes.escale', action='list'))
-    elif action == "update":
-        context["view"]="update"
-        context["escale"]=Escale.get_escale_by_id(idesc)
-        if request.method == "POST":
-            new_aportesc =request.form.get("aportesc")
-            new_harresc =request.form.get("harresc")
-            new_duresc=request.form.get("duresc")
-            new_noord=request.form.get("noord")
+            if codev:
+                search_results.extend(Escale.get_escale_by_airport(codev) or [])
+            if numvol:
+                result = Escale.get_escale_by_numvol(numvol)
+                if result:
+                    search_results.append(result)
 
-            Escale.update_escale(idesc,new_aportesc,new_harresc,new_duresc,new_noord)
-            return redirect(url_for('escale_routes.escale',action='details',id=idesc))
-    elif action == "delete" and idesc and request.method == "POST":
-        Escale.delete_escale(idesc)
-        return redirect(url_for('escale_routes.escale', action='list'))
+            if search_results:
+                context["escales"] = search_results
+                context["message"] = f"Found {len(search_results)} escale(s)."
+            else:
+                context["message"] = "No escales found matching the search criteria."
+        
+        elif action == "delete":
+            # Handle delete escale
+            idesc = request.form.get("IDESC")
+            if idesc:
+                Escale.delete_escale(idesc)
+                context["message"] = "Escale deleted successfully!"
+            else:
+                context["message"] = "IDESC is required to delete an escale."
+
+        elif action == "update":
+            # Handle update escale
+            idesc = request.form.get("IDESC")
+            aportesc = request.form.get("APORTESC")
+            harresc = request.form.get("HARRESC")
+            duresc = request.form.get("DURESC")
+            noord = request.form.get("NOORD")
+
+            if idesc:
+                Escale.update_escale(idesc, aportesc, harresc, duresc, noord)
+                context["message"] = "Escale updated successfully!"
+            else:
+                context["message"] = "IDESC is required to update an escale."
+
+    context["escales"] = Escale.get_all_escale()
 
     return render_template("escale.html", context=context)
