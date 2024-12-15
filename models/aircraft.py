@@ -79,13 +79,13 @@ class Aircraft:
             return row
         return None
     
-    def create_aircraft(numav, aircraft_type, datems, nbhddrev, status):
+    def create_aircraft( aircraft_type, datems, nbhddrev, status):
         conn = Aircraft.get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO aircraft (NUMAV, TYPE, datems, NBHDDREV, status)
-            VALUES (?, ?, ?, ?, ?)""",
-            (numav, aircraft_type, datems, nbhddrev, status))
+            INSERT INTO aircraft (TYPE, datems, NBHDDREV, status)
+            VALUES (?, ?, ?, ?)""",
+            (aircraft_type, datems, nbhddrev, status))
         conn.commit()
         conn.close()
     

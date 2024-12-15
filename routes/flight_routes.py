@@ -34,18 +34,17 @@ def flight():
     elif action == "create":
         context["view"] = "create"
         if request.method == "POST":
-            id=request.form.get("id")
             departure_airport = request.form.get("departure")
             arrival_airport = request.form.get("destination")
             departure_time = request.form.get("depart_time")
             flight_duration = request.form.get("duration")
             day_of_week = request.form.get("day")
 
-            if not all([id,departure_airport, arrival_airport, departure_time, flight_duration, day_of_week]):
+            if not all([departure_airport, arrival_airport, departure_time, flight_duration, day_of_week]):
                 context["error"] = "All fields except are required!"
                 return render_template("flight.html", context=context)
 
-            Vol.create_vol(id,departure_airport, arrival_airport, departure_time, 
+            Vol.create_vol(departure_airport, arrival_airport, departure_time, 
                          flight_duration, day_of_week)
             return redirect(url_for('flight_routes.flight', action='list'))
 

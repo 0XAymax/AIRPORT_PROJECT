@@ -59,7 +59,7 @@ class Escale:
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("""
-        INSERT INTO escale (APORTESC, HARRESC, DURESC, NOORD, NUMVOL) 
+        INSERT INTO escale ( HARRESC, DURESC, NOORD, NUMVOL) 
         VALUES (?, ?, ?, ?, ?)
         """, (airport_code, arrival_time, stop_duration, stop_order, flight_number))
         conn.commit()

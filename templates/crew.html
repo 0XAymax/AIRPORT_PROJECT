@@ -135,14 +135,24 @@
         <tr>
           <th>ID</th>
           <th>Flight ID</th>
+          <th>Departure</th>
+          <th>Destination</th>
+          <th>Departure Time</th>
+          <th>Duration</th>
+          <th>Day</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for crew_member in context.crew %}
+        {% for crew_member in context["crew"] %}
         <tr>
-          <td>{{ crew_member.NUMEMP }}</td>
-          <td>{{ crew_member.NUMVOL }}</td>
+          <td>{{ crew_member[0] }}</td>
+          <td>{{ crew_member[1] }}</td>
+          <td>{{ crew_member[2] }}</td>
+          <td>{{ crew_member[3] }}</td>
+          <td>{{ crew_member[4] }}</td>
+          <td>{{ crew_member[5] }}</td>
+          <td>{{ crew_member[6] }}</td>
           <td>
             <div class="action-links">
               <a href="{{ url_for('crew_routes.crew', action='details', id=crew_member['NUMEMP']) }}">View</a>
@@ -179,8 +189,15 @@
     <h2>Crew Member Details</h2>
     <div class="details-card">
       <table>
-        <tr><th>ID</th><td>{{ context["crew_member"][0][0] }}</td></tr>
-        <tr><th>Flight ID</th><td>{{ context["crew_member"][0][1] }}</td></tr>
+        <tr><th>ID</th><td>{{context["crew_member"][0][0]}}</td></tr>
+        <tr><th>Name</th><td>{{context["crew_member"][0][1]}}</td></tr>
+        <tr><th>Last Name</th><td>{{context["crew_member"][0][2]}}</td></tr>
+        <tr><th>Email</th><td>{{context["crew_member"][0][3]}}</td></tr>
+        <tr><th>Phone Number</th><td>{{context["crew_member"][0][4]}}</td></tr>
+        <tr><th>Function</th><td>{{context["crew_member"][0][5]}}</td></tr>
+        <tr><th>Hire Date</th><td>{{context["crew_member"][0][6]}}</td></tr>
+        <tr><th>NBMHV</th><td>{{context["crew_member"][0][7]}}</td></tr>
+        <tr><th>NBTHV</th><td>{{context["crew_member"][0][8]}}</td></tr>
       </table>
       <div class="action-links">
         <a href="{{ url_for('crew_routes.crew', action='update', id=context['crew_member'][0][0]) }}">Edit</a>

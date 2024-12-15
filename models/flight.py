@@ -90,7 +90,7 @@ class Vol:
             return rows
         return None
     
-    def create_vol(id,departure_airport, arrival_airport, departure_time,
+    def create_vol(departure_airport, arrival_airport, departure_time,
                flight_duration, day_of_week): 
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
@@ -98,14 +98,13 @@ class Vol:
         if day_of_week not in valid_days:
             raise ValueError(f"Invalid day. Must be one of {valid_days}")
         
-        if id is not None:
-            cursor.execute("""
-            INSERT INTO vol (NUMVOL,APORTDEP, APORTARR, HDEP, durvol, jvol) 
-            VALUES (?, ?, ?, ?, ?, ?)
-            """, (id,departure_airport, arrival_airport, departure_time,
+        cursor.execute("""
+            INSERT INTO vol (APORTDEP, APORTARR, HDEP, durvol, jvol) 
+            VALUES (?, ?, ?, ?, ?)
+            """, (departure_airport, arrival_airport, departure_time,
                   flight_duration, day_of_week))
-            conn.commit()
-            conn.close()
+        conn.commit()
+        conn.close()
 
     def delete_vol(nomvol):
         conn = Vol.get_db_connection()

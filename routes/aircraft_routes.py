@@ -33,17 +33,16 @@ def aircraft():
     elif action == "create" :
         context["view"]="create"
         if request.method == "POST":
-          numav = request.form.get("numav")
           aircraft_type = request.form.get("type")
           datems = request.form.get("datems")
           nbhddrev = request.form.get("nbhddrev")
           status = request.form.get("status")
 
-          if not numav or not aircraft_type or not datems or not nbhddrev or not status:
+          if not aircraft_type or not datems or not nbhddrev or not status:
                 context["error"] = "All fields are required!"
                 return render_template("aircraft.html", context=context)
         
-          Aircraft.create_aircraft(numav, aircraft_type, datems, nbhddrev, status)
+          Aircraft.create_aircraft( aircraft_type, datems, nbhddrev, status)
           return redirect(url_for('aircraft_routes.aircraft', action='list'))
     
 

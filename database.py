@@ -1,12 +1,12 @@
 import sqlite3
 
-con = sqlite3.connect('biblio.db')
+con = sqlite3.connect('airplain.db')
 cursor = con.cursor()
 
 # Aircraft Table
 cursor.execute("""
-   CREATE TABLE IF NOT EXISTS aircraft (
-    NUMAV INTEGER PRIMARY KEY NOT NULL,
+    CREATE TABLE IF NOT EXISTS aircraft (
+    NUMAV INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,
     TYPE VARCHAR(200) NOT NULL,
     datems DATE NOT NULL,
     NBHDDREV INTEGER DEFAULT 0,
@@ -17,7 +17,7 @@ cursor.execute("""
 # Employees Table
 cursor.execute("""
   CREATE TABLE IF NOT EXISTS employees (
-    NUMEMP INTEGER PRIMARY KEY NOT NULL,
+    NUMEMP INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     NOM TEXT NOT NULL,
     prenom TEXT,
     email TEXT NOT NULL UNIQUE,
@@ -28,15 +28,15 @@ cursor.execute("""
     salaire FLOAT NOT NULL,
     FONCTION TEXT NOT NULL,
     datemb DATE NOT NULL,
-    NBMHV INTEGER DEFAULT 0,
-    NBTHV INTEGER DEFAULT 0
+    NBMHV INTEGER DEFAULT NULL,
+    NBTHV INTEGER DEFAULT NULL
 )
 """)
 
 # Revision Table
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS revision (
-    NUMREV INTEGER PRIMARY KEY NOT NULL,
+    NUMREV INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     RAPPPORT TEXT NOT NULL,
     DATEREV DATE NOT NULL,
     NBHREV INTEGER NOT NULL,
@@ -60,7 +60,7 @@ cursor.execute("""
 # Escale Table
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS escale (
-        IDESC INTEGER PRIMARY KEY NOT NULL,
+        IDESC INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         APORTESC VARCHAR(3) NOT NULL,
         HARMESC TIME NOT NULL,
         DURESC TIME NOT NULL,
@@ -74,7 +74,7 @@ cursor.execute("""
 # Vol Table
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS vol (
-    NUMVOL INTEGER PRIMARY KEY NOT NULL,
+    NUMVOL INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     APORTDEP VARCHAR(255) NOT NULL,
     APORTARR VARCHAR(255) NOT NULL,
     HDEP TIME NOT NULL,

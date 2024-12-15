@@ -3,9 +3,8 @@ from datetime import datetime
 con = sqlite3.connect("airplain.db")
 cursor = con.cursor()
 context={}
-
-cursor.execute("SELECT ev.NUMEMP,e.NOM,e.prenom,e.email,e.tel FROM employee_vol ev, employees e WHERE ev.NUMEMP=e.NUMEMP")
+cursor.execute("SELECT e.NUMEMP,e.NUMVOL,v.APORTDEP,v.APORTARR,v.HDEP,v.durvol,v.jvol FROM employee_vol e,vol v WHERE e.NUMVOL=v.NUMVOL")
 rows=cursor.fetchall()
 print(rows)
-
-
+con.commit()
+con.close()

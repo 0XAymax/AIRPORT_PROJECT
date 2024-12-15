@@ -16,7 +16,7 @@ class Crew():
     def get_all_crew():
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("SELECT * FROM employee_vol")
+        db.execute("SELECT e.NUMEMP,e.NUMVOL,v.APORTDEP,v.APORTARR,v.HDEP,v.durvol,v.jvol FROM employee_vol e,vol v WHERE e.NUMVOL=v.NUMVOL")
         rows = db.fetchall()
         conn.close()
         return rows
@@ -25,7 +25,7 @@ class Crew():
     def get_crew_by_id(crew_id):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("SELECT * FROM employee_vol WHERE NUMEMP=?", (crew_id,))
+        db.execute("SELECT ev.NUMEMP,e.NOM,e.prenom,e.email,e.tel,e.FONCTION,e.datemb,e.NBMHV,e.NBTHV FROM employee_vol ev, employees e WHERE e.NUMEMP=?", (crew_id,))
         rows = db.fetchall()
         conn.close()
         if rows:
@@ -44,7 +44,7 @@ class Crew():
     def update_crew(crew_id, new_id):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("UPDATE employee_vol SET NUMEMP= ? WHERE NUMEMP=?", (crew_id,new_id))
+        db.execute("UPDATE employee_vol SET NUMEMP= ? WHERE NUMEMP=?", (new_id,crew_id))
         conn.commit()
         conn.close()
 
