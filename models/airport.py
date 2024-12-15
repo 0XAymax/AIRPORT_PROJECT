@@ -83,4 +83,13 @@ class Airport:
 
         conn.commit()
         conn.close()    
-
+    
+    @staticmethod
+    def get_airport_by_city(city):
+        conn=Airport.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT * FROM airport WHERE VILLE = ?",(city,))
+        rows =cursor.fetchall()
+        if rows:
+            return rows
+        return None

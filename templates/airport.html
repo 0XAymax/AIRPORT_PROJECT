@@ -119,7 +119,7 @@
     <nav>
         <a href="{{ url_for('airport_routes.airport', action='list') }}">List Airports</a>
         <a href="{{ url_for('airport_routes.airport', action='search') }}">Search Airport</a>
-        <a href="{{ url_for('airport_routes.airport', action='create') }}">Create Airport</a>
+        <a href="{{ url_for('airport_routes.airport', action='create') }}">Add Airport</a>
     </nav>
 
     {% if context.view == "list" %}
@@ -187,7 +187,7 @@
         {% endif %}
 
     {% elif context.view == "create" %}
-        <h2>Create New Airport</h2>
+        <h2>Add New Airport</h2>
         <form method="POST">
             <label for="codev">Airport Code:</label>
             <input type="text" id="codev" name="codev" required>
@@ -222,8 +222,14 @@
     {% elif context.view == "search" %}
         <h2>Search Airport</h2>
         <form method="POST">
-            <label for="name">Airport Name:</label>
+            <label for="name">Search by Airport Name:</label>
             <input type="text" id="name" name="name" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <form method="POST">
+            <label for="city">Search by City:</label>
+            <input type="text" id="city" name="city" required>
             <button type="submit">Search</button>
         </form>
         {% if context.airports %}

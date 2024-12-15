@@ -22,7 +22,17 @@ def crew():
         if request.method == "POST":
             flight_id = request.form.get("flight_id")
             crew_id2 = request.form.get("crew_id")
-            Crew.create_crew(flight_id, crew_id2)
+            nom=request.form.get("nom")
+            prenom=request.form.get("prenom")
+            email=request.form.get("email")
+            passw=request.form.get("password")
+            tel=request.form.get("tel")
+            ville=request.form.get("ville")
+            address=request.form.get("adresse")
+            salaire=request.form.get("salaire")
+            function=request.form.get("function")
+            datemb=request.form.get("datemb")
+            Crew.create_crew(flight_id, crew_id2,email,passw,nom,prenom,tel,ville,address,salaire,function,datemb)
             return redirect(url_for("crew_routes.crew", action="list"))
 
     elif action == "update" and crew_id:

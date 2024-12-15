@@ -33,10 +33,13 @@ class Crew():
         return None
 
     @staticmethod
-    def create_crew(flight_id,crew_id):
+    def create_crew(flight_id,crew_id,email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
         conn=Crew.get_db_connection()
         db=conn.cursor()
         db.execute("INSERT INTO employee_vol (NUMEMP,NUMVOL) VALUES (?, ?)", (crew_id,flight_id))
+        db.execute("""
+        INSERT INTO employees (NUMEMP,NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
+        VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """, (crew_id,nom, prenom, email,password_hash, tel, ville, adresse, salaire, fonction, datemb))
         conn.commit()
         conn.close()
 
