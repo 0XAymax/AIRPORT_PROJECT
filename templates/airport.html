@@ -208,11 +208,11 @@
         {% if context.airport %}
             <form method="POST">
                 <label for="nom">Airport Name:</label>
-                <input type="text" id="nom" name="nom" value="{{ context.airport.NOM }}" required>
+                <input type="text" id="nom" name="nom" value="{{ context.airport.NOM }}" >
                 <label for="pays">Country:</label>
-                <input type="text" id="pays" name="pays" value="{{ context.airport.Pays }}" required>
+                <input type="text" id="pays" name="pays" value="{{ context.airport.Pays }}" >
                 <label for="ville">City:</label>
-                <input type="text" id="ville" name="ville" value="{{ context.airport.VILLE }}" required>
+                <input type="text" id="ville" name="ville" value="{{ context.airport.VILLE }}" >
                 <button type="submit">Update Airport</button>
             </form>
         {% else %}

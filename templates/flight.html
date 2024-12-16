@@ -215,16 +215,16 @@
         <h2>Update Flight</h2>
         {% if context.flight %}
             <form method="POST">
-                <label for="departure">Departure:</label>
-                <input type="text" id="departure" name="departure" value="{{ context.flight.APORTDEP }}" required>
-                <label for="destination">Destination:</label>
-                <input type="text" id="destination" name="destination" value="{{ context.flight.APORTARR }}" required>
+                <label for="departure">Departure Code:</label>
+                <input type="text" id="departure" name="departure" value="{{ context.flight.APORTDEP }}" >
+                <label for="destination">Destination Code:</label>
+                <input type="text" id="destination" name="destination" value="{{ context.flight.APORTARR }}" >
                 <label for="hdep">Departure time:</label>
-                <input type="text" id="hdep" name="hdep" value="{{ context.flight.HDEP }}" required>
+                <input type="text" id="hdep" name="hdep" value="{{ context.flight.HDEP }}">
                 <label for="duration">Duration:</label>
-                <input type="text" id="duration" name="duration" value="{{ context.flight.durvol }}" required>
+                <input type="text" id="duration" name="duration" value="{{ context.flight.durvol }}" >
                 <label for="date">Day:</label>
-                <input type="text" id="date" name="date" value="{{ context.flight.jvol }}" required>
+                <input type="text" id="date" name="date" value="{{ context.flight.jvol }}" >
                 <button type="submit">Update Flight</button>
             </form>
         {% else %}

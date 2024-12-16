@@ -210,13 +210,13 @@
         {% if context.aircraft %}
             <form method="POST">
                 <label for="type">Aircraft Type:</label>
-                <input type="text" id="type" name="type" value="{{ context.aircraft.TYPE }}" required>
+                <input type="text" id="type" name="type" value="{{ context.aircraft.TYPE }}" >
                 <label for="datems">DATEMS:</label>
-                <input type="text" id="datems" name="datems" value="{{ context.aircraft.DATEMS }}" required>
+                <input type="text" id="datems" name="datems" value="{{ context.aircraft.DATEMS }}" >
                 <label for="nbhddrev">NBHDDREV:</label>
-                <input type="text" id="nbhddrev" name="nbhddrev" value="{{ context.aircraft.NBHDDREV }}" required>
+                <input type="text" id="nbhddrev" name="nbhddrev" value="{{ context.aircraft.NBHDDREV }}" >
                 <label for="status">Status:</label>
-                <input type="text" id="status" name="status" value="{{ context.aircraft.STATUS }}" required>
+                <input type="text" id="status" name="status" value="{{ context.aircraft.STATUS }}" >
                 <button type="submit">Update Aircraft</button>
             </form>
         {% else %}

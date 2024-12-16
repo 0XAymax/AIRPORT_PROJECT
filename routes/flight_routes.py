@@ -56,7 +56,7 @@ def flight():
             aportarr = request.form.get("destination") 
             hdep = request.form.get("hdep")
             durvol = request.form.get("duration")
-            jvol = request.form.get("day")
+            jvol = request.form.get("date")
 
             Vol.update_vol(flight_id, aportdep, aportarr, hdep, durvol, jvol)
             return redirect(url_for('flight_routes.flight', action='details', id=flight_id))

@@ -33,13 +33,12 @@ class Crew():
         return None
 
     @staticmethod
-    def create_crew(flight_id,crew_id,email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
+    def create_crew(email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("INSERT INTO employee_vol (NUMEMP,NUMVOL) VALUES (?, ?)", (crew_id,flight_id))
         db.execute("""
-        INSERT INTO employees (NUMEMP,NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
-        VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """, (crew_id,nom, prenom, email,password_hash, tel, ville, adresse, salaire, fonction, datemb))
+        INSERT INTO employees (NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """, (nom, prenom, email,password_hash, tel, ville, adresse, salaire, fonction, datemb))
         conn.commit()
         conn.close()
 
@@ -57,4 +56,14 @@ class Crew():
         db=conn.cursor()
         db.execute("DELETE FROM employee_vol WHERE NUMEMP=?", (crew_id,))
         conn.commit()    
+        conn.close()
+    
+    @staticmethod
+    def insert_crew_member(email,flight_id):
+        conn=Crew.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT NUMEMP FROM employees WHERE email = ?",(email,))
+        row=cursor.fetchone()
+        cursor.execute("INSERT INTO employee_vol (NUMEMP,NUMVOL) VALUES (?,?) ",(row[0],flight_id))
+        conn.commit()
         conn.close()

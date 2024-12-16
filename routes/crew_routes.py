@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,Blueprint,redirect,url_for
+from flask import render_template,request,Blueprint,redirect,url_for
 from models.crew import Crew
 
 crew_routes=Blueprint("crew_routes",__name__)
@@ -20,8 +20,7 @@ def crew():
     elif action == "create":
         context["view"] = "create"
         if request.method == "POST":
-            flight_id = request.form.get("flight_id")
-            crew_id2 = request.form.get("crew_id")
+            flight_id = request.form.get("flight_id") 
             nom=request.form.get("nom")
             prenom=request.form.get("prenom")
             email=request.form.get("email")
@@ -32,7 +31,8 @@ def crew():
             salaire=request.form.get("salaire")
             function=request.form.get("function")
             datemb=request.form.get("datemb")
-            Crew.create_crew(flight_id, crew_id2,email,passw,nom,prenom,tel,ville,address,salaire,function,datemb)
+            Crew.create_crew(email,passw,nom,prenom,tel,ville,address,salaire,function,datemb)
+            Crew.insert_crew_member(email,flight_id)
             return redirect(url_for("crew_routes.crew", action="list"))
 
     elif action == "update" and crew_id:

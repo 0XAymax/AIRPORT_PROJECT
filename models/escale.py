@@ -1,10 +1,10 @@
 import sqlite3
 
 class Escale:
-    def __init__(self,IDESC,APORTESC,HARRESC,DURESC,NOORD,NUMVOL):
+    def __init__(self,IDESC,APORTESC,HARMESC,DURESC,NOORD,NUMVOL):
         self.IDESC=IDESC
         self.APORTESC=APORTESC
-        self.HARRESC=HARRESC
+        self.HARMESC=HARMESC
         self.DURESC=DURESC
         self.NOORD=NOORD
         self.NUMVOL=NUMVOL
@@ -31,19 +31,21 @@ class Escale:
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("SELECT * FROM escale WHERE NUMVOL=?",(numvol,))
-        row = cursor.fetchone()
+        row = cursor.fetchall()
         conn.close()
-        return row
+        if row:
+            return row
+        return None
     
     @staticmethod
     def get_heure_arrive(idesc):
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT HARRESC FROM escale WHERE IDESC = ?",(idesc,))
+        cursor.execute("SELECT HARMESC FROM escale WHERE IDESC = ?",(idesc,))
         row=cursor.fetchone()
         conn.close()
         if row:
-            return row["HARRESC"]
+            return row["HARMESC"]
         return None
     
     @staticmethod
@@ -59,7 +61,7 @@ class Escale:
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("""
-        INSERT INTO escale ( HARRESC, DURESC, NOORD, NUMVOL) 
+        INSERT INTO escale (APORTESC, HARMESC, DURESC, NOORD, NUMVOL) 
         VALUES (?, ?, ?, ?, ?)
         """, (airport_code, arrival_time, stop_duration, stop_order, flight_number))
         conn.commit()
@@ -77,7 +79,7 @@ class Escale:
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("SELECT * FROM escale WHERE IDESC =?",(idesc,))
-        row=cursor.fetchone()
+        row=cursor.fetchall()
         if row:
             return row
         return None
@@ -88,7 +90,7 @@ class Escale:
         if aportesc:
             cursor.execute("UPDATE escale SET APORTESC = ? WHERE IDESC = ?", (aportesc,idesc))
         if harresc:
-            cursor.execute("UPDATE escale SET HARRESC = ? WHERE IDESC = ?", (harresc,idesc))
+            cursor.execute("UPDATE escale SET HARMESC = ? WHERE IDESC = ?", (harresc,idesc))
         if duresc:
             cursor.execute("UPDATE escale SET DURESC = ? WHERE IDESC = ?", (duresc,idesc))
         if noord:
