@@ -239,7 +239,7 @@ class FL_Employee(Employee):
             return row
         return None
     
-    def set_NBMHV(self, employee_id, NBMHV):
+    def set_NBMHV(self, employee_id, NBMHV):#set to O as default !!!!!
         conn=Employee.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("UPDATE employees SET NBMHV = ? WHERE NUMEMP = ?", (NBMHV, employee_id))
