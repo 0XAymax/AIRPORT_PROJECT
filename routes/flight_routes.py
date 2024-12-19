@@ -26,7 +26,7 @@ def flight():
             if day:
              context["flights"] = Vol.get_vol_by_day(day)
             if depart: 
-             context["flights"] = Vol.get_vol_by_depart(depart)
+             context["flights"] = Vol.get_all_vol_by_depart(depart)
             if hddep:
               context["flights"] = Vol.get_vol_by_hdep(hddep) 
         context["view"] = "search"

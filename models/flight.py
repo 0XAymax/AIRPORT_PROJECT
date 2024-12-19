@@ -1,7 +1,8 @@
 import sqlite3
 
 class Vol:
-    def __init__(self,NUMVOL,APORTDEP,APORTARR,HDEP,durvol,jvol):
+    def __init__(self,id,NUMVOL,APORTDEP,APORTARR,HDEP,durvol,jvol):
+        self.id=id
         self.NUMVOL=NUMVOL
         self.APORTDEP=APORTDEP
         self.APORTARR=APORTARR
@@ -16,10 +17,16 @@ class Vol:
         return conn
         
     @staticmethod
-    def get_vol(numvol):
+    def get_vol(id):
         conn=Vol.get_db_connection()
         cursor =conn.cursor()
-        cursor.execute("SELECT v.NUMVOL,dep.NOM,arr.NOM ,HDEP,durvol,jvol FROM vol v INNER JOIN airport dep ON v.APORTDEP = dep.CODEV INNER JOIN  airport arr ON v.APORTARR = arr.CODEV WHERE NUMVOL = ?",(numvol,))
+        cursor.execute("""
+    SELECT v.NUMVOL, dep.NOM, arr.NOM, HDEP, durvol, jvol
+    FROM flight v
+    INNER JOIN airport dep ON v.APORTDEP = dep.CODEV
+    INNER JOIN airport arr ON v.APORTARR = arr.CODEV
+    WHERE id = ?;
+""",(id,))
         row= cursor.fetchall()
         conn.close()
         if row:
@@ -27,10 +34,10 @@ class Vol:
         return None
 
     @staticmethod
-    def get_depart_arrive(numvol):
+    def get_depart_arrive(id):
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT APORTDEP,APORTARR FROM vol WHERE NUMVOL =?",(numvol,))
+        cursor.execute("SELECT APORTDEP,APORTARR FROM flight WHERE id =?",(id,))
         row=cursor.fetchall()
         conn.close()
         if row:
@@ -41,7 +48,7 @@ class Vol:
     def get_vol_by_depart(depart):
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(" SELECT v.* FROM vol v INNER JOIN airport a ON v.APORTDEP = a.CODEV WHERE a.NOM = ?",(depart,))
+        cursor.execute(" SELECT v.NUMVOL, v.APORTDEP, v.APORTARR, v.HDEP, v.durvol, v.jvol FROM flight v INNER JOIN airport a ON v.APORTDEP = a.CODEV WHERE a.NOM = ?",(depart,))
         row=cursor.fetchall()
         conn.close()
         if row:
@@ -52,7 +59,7 @@ class Vol:
     def get_all_vol():
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT v.NUMVOL,dep.NOM AS APORTDEP, arr.NOM AS APORTARR FROM vol v INNER JOIN airport dep ON v.APORTDEP = dep.CODEV INNER JOIN  airport arr ON v.APORTARR = arr.CODEV")
+        cursor.execute("SELECT v.NUMVOL,dep.NOM AS APORTDEP, arr.NOM AS APORTARR FROM flight v INNER JOIN airport dep ON v.APORTDEP = dep.CODEV INNER JOIN  airport arr ON v.APORTARR = arr.CODEV")
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -63,7 +70,7 @@ class Vol:
     def get_all_vol_by_depart(depart):
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM vol WHERE APORTDEP =? ",(depart,))
+        cursor.execute("SELECT NUMVOL,APORTDEP,APORTARR,HDEP,durvol,jvol FROM flight WHERE APORTDEP =? ",(depart,))
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -74,7 +81,7 @@ class Vol:
     def count_flights():
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM vol")
+        cursor.execute("SELECT COUNT(*) FROM flight")
         count = cursor.fetchone()[0]
         conn.close()
         return count
@@ -83,7 +90,7 @@ class Vol:
     def get_vol_by_day(day):
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM vol WHERE jvol = ?", (day,))
+        cursor.execute("SELECT * FROM flight WHERE jvol = ?", (day,))
         rows = cursor.fetchall()
         conn.close()
         if rows:
@@ -98,17 +105,17 @@ class Vol:
             raise ValueError(f"Invalid day. Must be one of {valid_days}")
         
         cursor.execute("""
-            INSERT INTO vol (NUMVOL,APORTDEP, APORTARR, HDEP, durvol, jvol) 
+            INSERT INTO flight (NUMVOL,APORTDEP, APORTARR, HDEP, durvol, jvol) 
             VALUES (?, ?, ?, ?, ?, ?)
             """, (numv,departure_airport, arrival_airport, departure_time,
                   flight_duration, day_of_week))
         conn.commit()
         conn.close()
 
-    def delete_vol(nomvol):
+    def delete_vol(id):
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM vol WHERE NUMVOL=?",(nomvol,))
+        cursor.execute("DELETE FROM flight WHERE NUMVOL=?",(id,))
         conn.commit()
         conn.close()
     
@@ -116,17 +123,17 @@ class Vol:
         conn =Vol.get_db_connection()
         cursor=conn.cursor()
         if numv:
-            cursor.execute("UPDATE vol SET NUMVOL = ? WHERE NUMVOL = ?",(numvol))
+            cursor.execute("UPDATE flight SET NUMVOL = ? WHERE id = ?",(numvol))
         if aportdep:
-            cursor.execute("UPDATE vol SET APORTDEP = ? WHERE NUMVOL = ?",(aportdep,numvol))
+            cursor.execute("UPDATE flight SET APORTDEP = ? WHERE id = ?",(aportdep,numvol))
         if aportarr:
-            cursor.execute("UPDATE vol SET APORTARR = ? WHERE NUMVOL = ?",(aportarr,numvol))
+            cursor.execute("UPDATE flight SET APORTARR = ? WHERE id = ?",(aportarr,numvol))
         if hdep:
-            cursor.execute("UPDATE vol SET HDEP = ? WHERE NUMVOL =?",(hdep,numvol))
+            cursor.execute("UPDATE flight SET HDEP = ? WHERE id =?",(hdep,numvol))
         if durvol:
-            cursor.execute("UPDATE vol SET durvol =? WHERE NUMVOL =?",(durvol,numvol))
+            cursor.execute("UPDATE flight SET durvol =? WHERE id =?",(durvol,numvol))
         if jvol:
-            cursor.execute("UPDATE vol SET jvol = ? WHERE NUMVOL = ?",(jvol,numvol))
+            cursor.execute("UPDATE flight SET jvol = ? WHERE id = ?",(jvol,numvol))
         conn.commit()
         conn.close() 
 
@@ -134,7 +141,7 @@ class Vol:
     def get_vol_by_hdep(hdep):
         conn=Vol.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM vol WHERE HDEP = ?",(hdep,))
+        cursor.execute("SELECT * FROM flight WHERE HDEP = ?",(hdep,))
         rows=cursor.fetchall()
         conn.close()
         if rows:
