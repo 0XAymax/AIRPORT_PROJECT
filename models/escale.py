@@ -97,4 +97,24 @@ class Escale:
             cursor.execute("UPDATE escale SET NOORD = ? WHERE IDESC = ?", (noord, idesc))
 
         conn.commit()
-        conn.close()    
+        conn.close()   
+         
+    def check_airport_exists(codev):
+       conn=Escale.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM airport WHERE CODEV = ?", (codev,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None    
+    
+    def check_flight_exists(numvol):
+       conn=Escale.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM Vol WHERE NUMVOL = ?", (numvol,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None

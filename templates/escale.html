@@ -209,17 +209,28 @@
         <h2>Create Escale</h2>
         <form method="POST" action="/escale?action=create">
             <label for="APORTESC">Airport Code:</label>
-            <input type="text" name="APORTESC" required>
+            <input type="text" name="APORTESC" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" required>
             <label for="HARRESC">Arrival Time:</label>
-            <input type="text" name="HARRESC" required>
+            <input type="text" name="HARRESC" placeholder="HH:MM" 
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45." required>
             <label for="DURESC">Stop Duration:</label>
-            <input type="text" name="DURESC" required>
+            <input type="text" name="DURESC" placeholder="HH:MM" 
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 02:00."
+             required>
             <label for="NOORD">Stop Order:</label>
-            <input type="text" name="NOORD" required>
+            <input type="text" name="NOORD" step="1" placeholder="e.g., 1" pattern="^-?\d+$" title="Please enter a valid number."  required>
             <label for="NUMVOL">Flight Number:</label>
-            <input type="text" name="NUMVOL" required>
+            <input type="text" name="NUMVOL" placeholder="e.g., 42" pattern="^-?\d+$" title="Please enter a valid number."  required>
             <button type="submit">Create</button>
         </form>
+        {% if context.error2 %}
+           <p style="color:red;">{{ context.error2 }}</p>
+        {% endif %} 
+        {% if context.error4 %}
+           <p style="color:red;">{{ context.error4 }}</p>
+        {% endif %}
     {% elif context.view == "search" %}
         <h2>Search Escale</h2>
         <form method="POST">
@@ -231,7 +242,7 @@
         <form method="POST">
             <h3>Search by Flight ID</h3>
             <label for="NUMVOL">Flight ID:</label>
-            <input type="text" id="NUMVOL" name="NUMVOL">
+            <input type="text" id="NUMVOL" name="NUMVOL" placeholder="e.g., 42" pattern="^-?\d+$" >
             <button type="submit" name="search_type" value="NUMVOL">Search</button>
         </form>
         {% if context.escales %}
@@ -265,18 +276,25 @@
         {% if context.escale %}
         <form method="POST" >
             <label for="APORTESC">Airport Code:</label>
-            <input type="text" name="APORTESC" value="{{ context.escale.APORTESC }}" >
+            <input type="text" name="APORTESC" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" value="{{ context.escale.APORTESC }}" >
             <label for="HARRESC">Arrival Time:</label>
-            <input type="text" name="HARRESC" value="{{ context.escale.HARMESC }}" >
+            <input type="text" name="HARRESC" placeholder="HH:MM" 
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45." value="{{ context.escale.HARMESC }}" >
             <label for="DURESC">Stop Duration:</label>
-            <input type="text" name="DURESC" value="{{ context.escale.DURESC }}" >
+            <input type="text" name="DURESC" placeholder="HH:MM"  pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 02:00" value="{{ context.escale.DURESC }}" >
             <label for="NOORD">Stop Order:</label>
-            <input type="text" name="NOORD" value="{{ context.escale.NOORD }}" >
+            <input type="text" name="NOORD" placeholder="e.g., 100" pattern="^-?\d+$" title="Please enter a valid number."  value="{{ context.escale.NOORD }}" >
             <button type="submit">Update</button>
         </form>
         {% else %}
              <p>Escale not found.</p>
         {% endif %}
+        {% if context.error3 %}
+        <p style="color:red;">{{ context.error3 }}</p>
+        {% endif %}  
+
     {% endif %}
 </body>
 </html>

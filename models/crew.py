@@ -25,7 +25,7 @@ class Crew():
     def get_crew_by_id(crew_id):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("SELECT ev.NUMEMP,e.NOM,e.prenom,e.email,e.tel,e.FONCTION,e.datemb,e.NBMHV,e.NBTHV FROM employee_vol ev, employees e WHERE e.NUMEMP=?", (crew_id,))
+        db.execute("SELECT e.NUMEMP,e.NOM,e.prenom,e.email,e.tel,e.FONCTION,e.datemb,e.NBMHV,e.NBTHV FROM employees e WHERE e.NUMEMP=?", (crew_id,))
         rows = db.fetchall()
         conn.close()
         if rows:
@@ -43,7 +43,7 @@ class Crew():
         conn.close()
 
     @staticmethod
-    def update_crew(crew_id, new_id):
+    def update_crew(crew_id, new_id,newflight,newnom,newprenom,newemai):
         conn=Crew.get_db_connection()
         db=conn.cursor()
         db.execute("UPDATE employee_vol SET NUMEMP= ? WHERE NUMEMP=?", (new_id,crew_id))
@@ -67,3 +67,13 @@ class Crew():
         cursor.execute("INSERT INTO employee_vol (NUMEMP,NUMVOL) VALUES (?,?) ",(row[0],flight_id))
         conn.commit()
         conn.close()
+    
+    def check_flight_exists(numvol):
+       conn=Crew.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM Vol WHERE NUMVOL = ?", (numvol,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None

@@ -171,7 +171,7 @@
     <h2>Add Crew Member</h2>
     <form method="POST">
       <label for="flight_id">Flight ID:</label>
-      <input type="text" id="flight_id" name="flight_id" required />
+      <input type="text" id="flight_id" name="flight_id" placeholder="e.g., 42" pattern="^-?\d+$"  title="Please enter a whole number." required />
       <label for="nom">Name:</label>
       <input type="text" id="nom" name="nom" required />
       <label for="prenom">Last name:</label>
@@ -191,10 +191,15 @@
       <label for="function">Function:</label>
       <input type="text" id="function" name="function" required />
       <label for="datemb">Hire Date:</label>
-      <input type="text" id="datemb" name="datemb" required />
-
+      <input type="text" id="datemb" name="datemb" placeholder="YYYY-MM-DD"
+      pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" 
+      title="Please enter a valid date in the format YYYY-MM-DD (e.g., 2023-12-31)."
+       required />
       <button type="submit">Add Crew Member</button>
     </form>
+    {% if context.error %}
+        <p style="color:red;">{{ context.error }}</p>
+    {% endif %}
 
     {% elif context.view == "update" %}
     <h2>Edit Crew Member</h2>
@@ -206,6 +211,7 @@
 
     {% elif context.view == "details" %}
     <h2>Crew Member Details</h2>
+    {% if context.crew_member%}
     <div class="details-card">
       <table>
         <tr><th>ID</th><td>{{context["crew_member"][0][0]}}</td></tr>
@@ -225,7 +231,8 @@
         </form>
       </div>
     </div>
-    {% endif %}
+    {%endif%}
+  {% endif %}
 
   </body>
 </html>

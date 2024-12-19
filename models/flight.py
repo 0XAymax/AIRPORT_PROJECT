@@ -90,8 +90,7 @@ class Vol:
             return rows
         return None
     
-    def create_vol(departure_airport, arrival_airport, departure_time,
-               flight_duration, day_of_week): 
+    def create_vol(numv,departure_airport, arrival_airport, departure_time,flight_duration, day_of_week): 
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
         valid_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -99,9 +98,9 @@ class Vol:
             raise ValueError(f"Invalid day. Must be one of {valid_days}")
         
         cursor.execute("""
-            INSERT INTO vol (APORTDEP, APORTARR, HDEP, durvol, jvol) 
-            VALUES (?, ?, ?, ?, ?)
-            """, (departure_airport, arrival_airport, departure_time,
+            INSERT INTO vol (NUMVOL,APORTDEP, APORTARR, HDEP, durvol, jvol) 
+            VALUES (?, ?, ?, ?, ?, ?)
+            """, (numv,departure_airport, arrival_airport, departure_time,
                   flight_duration, day_of_week))
         conn.commit()
         conn.close()
@@ -113,9 +112,11 @@ class Vol:
         conn.commit()
         conn.close()
     
-    def update_vol(numvol,aportdep,aportarr,hdep,durvol,jvol):   
+    def update_vol(numv,numvol,aportdep,aportarr,hdep,durvol,jvol):   
         conn =Vol.get_db_connection()
         cursor=conn.cursor()
+        if numv:
+            cursor.execute("UPDATE vol SET NUMVOL = ? WHERE NUMVOL = ?",(numvol))
         if aportdep:
             cursor.execute("UPDATE vol SET APORTDEP = ? WHERE NUMVOL = ?",(aportdep,numvol))
         if aportarr:
@@ -140,3 +141,33 @@ class Vol:
             return rows
         return None                       
     
+    def check_airport_exists(codev):
+       conn=Vol.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM airport WHERE CODEV = ?", (codev,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None
+    
+    def aircraft_is_available(numvol):
+       conn=Vol.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT status FROM aircraft WHERE NUMAV =?",(numvol,))
+       result=cursor.fetchone()
+
+       if result:
+           return result[0]
+       return None
+    
+    def aircraft_exists(numav):
+       conn=Vol.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM aircraft WHERE NUMAV = ?", (numav,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None

@@ -194,11 +194,17 @@
             <label for="type">Aircraft Type:</label>
             <input type="text" id="type" name="type" required>
             <label for="datems">DATEMS:</label>
-            <input type="text" id="datems" name="datems" required>
+            <input type="text" id="datems" name="datems"
+            placeholder="YYYY-MM-DD"
+            pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" 
+            title="Please enter a valid date in the format YYYY-MM-DD (e.g., 2023-12-31)." required>
             <label for="nbhddrev">NBHDDREV:</label>
-            <input type="text" id="nbhddrev" name="nbhddrev" required>
+            <input type="text" id="nbhddrev" name="nbhddrev"  placeholder="e.g., 100" pattern="^-?\d+$"  title="Please enter a valid number."  required>
             <label for="status">Status:</label>
-            <input type="text" id="status" name="status" required>
+            <input type="text" id="status" name="status" placeholder="Available/In Maintenace/Out of Service"
+            pattern="^(Available|In Maintenance|Out of Service)$" 
+            title="Please enter one of the following: Available, In Maintenance, or Out of Service."
+            required>
             <button type="submit">Create Aircraft</button>
         </form>
         {% if context.error %}
@@ -212,11 +218,19 @@
                 <label for="type">Aircraft Type:</label>
                 <input type="text" id="type" name="type" value="{{ context.aircraft.TYPE }}" >
                 <label for="datems">DATEMS:</label>
-                <input type="text" id="datems" name="datems" value="{{ context.aircraft.DATEMS }}" >
+                <input type="text" id="datems" name="datems" 
+                placeholder="YYYY-MM-DD"
+                pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" 
+                title="Please enter a valid date in the format YYYY-MM-DD (e.g., 2023-12-31)."
+                value="{{ context.aircraft.DATEMS }}" >
                 <label for="nbhddrev">NBHDDREV:</label>
-                <input type="text" id="nbhddrev" name="nbhddrev" value="{{ context.aircraft.NBHDDREV }}" >
+                <input type="text" id="nbhddrev" name="nbhddrev"  placeholder="e.g., 100" pattern="^-?\d+$"  title="Please enter a whole number."  value="{{ context.aircraft.NBHDDREV }}" >
                 <label for="status">Status:</label>
-                <input type="text" id="status" name="status" value="{{ context.aircraft.STATUS }}" >
+                <input type="text" id="status" name="status" 
+                placeholder="Available/In Maintenace/Out of Service"
+                pattern="^(Available|In Maintenance|Out of Service)$" 
+                title="Please enter one of the following: Available, In Maintenance, or Out of Service."
+                value="{{ context.aircraft.STATUS }}" >
                 <button type="submit">Update Aircraft</button>
             </form>
         {% else %}

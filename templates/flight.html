@@ -157,7 +157,7 @@
             <div class="details-card">
                 <table>
                     <tr>
-                        <th>ID</th>
+                        <th>Aircraft ID</th>
                         <td>{{ context["flight"][0][0] }}</td>
                     </tr>
                     <tr>
@@ -173,11 +173,11 @@
                         <td>{{ context["flight"][0][3] }}</td>
                     </tr>
                     <tr>
-                        <th>Date</th>
+                        <th>Duration</th>
                         <td>{{ context["flight"][0][4] }}</td>
                     </tr>
                     <tr>
-                        <th>Duration</th>
+                        <th>Day</th>
                         <td>{{ context["flight"][0][5] }}</td>
                     </tr>
                 </table>
@@ -195,42 +195,82 @@
     {% elif context.view == "create" %}
         <h2>Create New Flight</h2>
         <form method="POST">
-            <label for="departure">Departure:</label>
-            <input type="text" id="departure" name="departure" required>
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" name="destination" required>
+            <label for="numav">Aircraft ID:</label>
+            <input type="text" id="numav" name="numav" placeholder="e.g., 12" pattern="^-?\d+$" required>
+            <label for="departure">Departure Code:</label>
+            <input type="text" id="departure" name="departure" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" required>
+            <label for="destination">Destination Code:</label>
+            <input type="text" id="destination" name="destination" placeholder="e.g:JFX" pattern="^[A-Z]{3}$" required>
             <label for="depart_time">Departure time:</label>
-            <input type="text" id="depart_time" name="depart_time" required>
+            <input type="text" id="depart_time" name="depart_time" placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45."
+            required>
             <label for="duration">Duration:</label>
-            <input type="text" id="duration" name="duration" required>
+            <input type="text" id="duration" name="duration" placeholder="HH:MM" 
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45."
+            required>
             <label for="day">Day:</label>
-            <input type="text" id="day" name="day" required>
+            <input type="text" id="day" name="day" placeholder="Monday/Tuesday/...." pattern="^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$" required>
             <button type="submit">Create Flight</button>
         </form>
         {% if context.error %}
             <p style="color:red;">{{ context.error }}</p>
         {% endif %}
+        {% if context.error2 %}
+            <p style="color:red;">{{ context.error2 }}</p>
+        {% endif %}
+        {% if context.error5 %}
+            <p style="color:red;">{{ context.error5 }}</p>
+        {% endif %}
+        {% if context.error6 %}
+            <p style="color:red;">{{ context.error6 }}</p>
+        {% endif %}
+        {% if context.available %}
+            <p style="color:red;">{{ context.available }}</p>
+        {% endif %}
+        
 
     {% elif context.view == "update" %}
         <h2>Update Flight</h2>
         {% if context.flight %}
             <form method="POST">
+                <label for="numaav">Aircraft ID:</label>
+                <input type="text" id="numaav" name="numaav" placeholder="e.g., 12" pattern="^-?\d+$" required>
                 <label for="departure">Departure Code:</label>
-                <input type="text" id="departure" name="departure" value="{{ context.flight.APORTDEP }}" >
+                <input type="text" id="departure" name="departure" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" value="{{ context.flight.APORTDEP }}" >
                 <label for="destination">Destination Code:</label>
-                <input type="text" id="destination" name="destination" value="{{ context.flight.APORTARR }}" >
+                <input type="text" id="destination" name="destination" placeholder="e.g:JFX" pattern="^[A-Z]{3}$" value="{{ context.flight.APORTARR }}" >
                 <label for="hdep">Departure time:</label>
-                <input type="text" id="hdep" name="hdep" value="{{ context.flight.HDEP }}">
+                <input type="text" id="hdep" name="hdep"  placeholder="HH:MM"
+                pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+                title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45."
+                value="{{ context.flight.HDEP }}">
                 <label for="duration">Duration:</label>
-                <input type="text" id="duration" name="duration" value="{{ context.flight.durvol }}" >
+                <input type="text" id="duration" name="duration" placeholder="HH:MM"
+                pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+                title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45."
+                value="{{ context.flight.durvol }}" >
                 <label for="date">Day:</label>
-                <input type="text" id="date" name="date" value="{{ context.flight.jvol }}" >
+                <input type="text" id="date" name="date" placeholder="Monday/Tuesday/...." pattern="^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$" value="{{ context.flight.jvol }}" >
                 <button type="submit">Update Flight</button>
             </form>
         {% else %}
             <p>Flight not found.</p>
         {% endif %}
-
+        {% if context.error3 %}
+            <p style="color:red;">{{ context.error3 }}</p>
+        {% endif %}
+        {% if context.error4 %}
+            <p style="color:red;">{{ context.error4 }}</p>
+        {% endif %}
+        {% if context.error8 %}
+            <p style="color:red;">{{ context.error8 }}</p>
+        {% endif %}
+        {% if context.available2 %}
+            <p style="color:red;">{{ context.available2 }}</p>
+        {% endif %}
         {% elif context.view == "search" %}
         <h2>Search Flight</h2>
     
@@ -238,7 +278,7 @@
         <form method="POST">
             <h3>Search by Day</h3>
             <label for="day">Day:</label>
-            <input type="text" id="day" name="day">
+            <input type="text" id="day" name="day" placeholder="Monday/Tuesday/...." pattern="^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$">
             <button type="submit" name="search_type" value="day">Search by Day</button>
         </form>
     
@@ -246,14 +286,16 @@
         <form method="POST">
             <h3>Search by Departure Airport</h3>
             <label for="depart">Departure Airport:</label>
-            <input type="text" id="depart" name="depart">
+            <input type="text" id="depart" name="depart" placeholder="e.g:JFX" pattern="^[A-Z]{3}$">
             <button type="submit" name="search_type" value="depart">Search by Departure</button>
         </form>
 
         <form method="POST">
             <h3>Search by Departure Time</h3>
             <label for="hddep">Departure Time:</label>
-            <input type="text" id="hddep" name="hddep">
+            <input type="text" id="hddep" name="hddep" placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
+            title="Please enter a valid time in 24-hour format (HH:MM), e.g., 08:00 or 23:45.">
             <button type="submit" name="search_type" value="depart">Search</button>
         </form>
     

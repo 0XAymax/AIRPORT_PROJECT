@@ -39,7 +39,12 @@ def escale():
             if not all([airport_code, arrival_time, stop_duration, stop_order, flight_number]):
                 context["error"] = "All fields are required to create an escale!"
                 return render_template("escale.html", context=context)
-
+            if not Escale.check_airport_exists(airport_code):
+                context["error2"] ="Airport code doesn't exists!,check airports"
+                return render_template("escale.html", context=context)
+            if not Escale.check_flight_exists(flight_number):
+                context["error4"]="Flight ID doesn't exists !"
+                return render_template("escale.html",context=context)
             Escale.create_escale(airport_code, arrival_time, stop_duration, stop_order, flight_number)
             return redirect(url_for('escale_routes.escale', action='list'))
 
@@ -52,6 +57,9 @@ def escale():
             stop_duration = request.form.get("DURESC")
             stop_order = request.form.get("NOORD")
 
+            if not Escale.check_airport_exists(airport_code):
+                context["error3"] ="Airport code doesn't exists!,check airports"
+                return render_template("escale.html", context=context)
             Escale.update_escale(escale_id, airport_code, arrival_time, stop_duration, stop_order)
             return redirect(url_for('escale_routes.escale', action='details', id=escale_id))
 

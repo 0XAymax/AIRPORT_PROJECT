@@ -5,6 +5,7 @@ from routes.airport_routes import airport_routes
 from routes.escale_routes import escale_routes
 from routes.flight_routes import flight_routes
 from routes.crew_routes import crew_routes
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
