@@ -45,7 +45,7 @@ def crew():
         context["crew_member"] = Crew.get_crew_by_id(crew_id)
         context["view"] = "update"
         if request.method == "POST":
-            new_id = request.form.get("new_id")
+            new_id = request.form.get("flight_id")
             new_name=request.form.get("new_nom")
             new_prenom=request.form.get("new_prenom")
             new_email=request.form.get("new_email")

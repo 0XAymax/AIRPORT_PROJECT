@@ -121,12 +121,11 @@ class Crew():
     
     @staticmethod
     def get_all_flights():
-       conn=Crew.get_db_connection()
-       cursor=conn.cursor()
-
-       cursor.execute("SELECT id FROM flight")
-       result = cursor.fetchall()
-       conn.close()
-       if result:
-           return result
-       return None
+        conn=Crew.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT id FROM flight")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None

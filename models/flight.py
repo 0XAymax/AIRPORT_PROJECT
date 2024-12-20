@@ -166,7 +166,7 @@ class Vol:
      cursor=conn.cursor()
      try:
         # Query example for SQLAlchemy
-        results = cursor.execute("SELECT NUMAV FROM aircraft").fetchall()
+        results = cursor.execute("SELECT NUMAV FROM aircraft WHERE status ='Available'").fetchall()
 
         # Convert the results into a simple list
         aircraft_ids = [result[0] for result in results]  # Extract the ID from each tuple

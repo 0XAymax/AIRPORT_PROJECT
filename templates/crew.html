@@ -273,8 +273,8 @@
     {% elif context.view == "update" %}
     <h2>Edit Crew Member</h2>
     <form method="POST">
-      <label for="new_id">Flight ID:</label>
-      <select id="new_id" name="new_id" value="{{context['crew_member'][0][1]}}" >
+      <label for="flight_id">Flight ID:</label>
+      <select id="flight_id" name="flight_id" value="{{context['crew_member'][0][1]}}" >
         <option value="" disabled selected>Select Flight ID</option>
       </select>
       <label for="new_nom">Name:</label>
