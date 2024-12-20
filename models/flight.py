@@ -122,18 +122,18 @@ class Vol:
     def update_vol(numv,numvol,aportdep,aportarr,hdep,durvol,jvol):   
         conn =Vol.get_db_connection()
         cursor=conn.cursor()
-        if numv:
-            cursor.execute("UPDATE flight SET NUMVOL = ? WHERE id = ?",(numvol))
+        if numvol:
+            cursor.execute("UPDATE flight SET NUMVOL = ? WHERE id = ?",(numvol,numv))
         if aportdep:
-            cursor.execute("UPDATE flight SET APORTDEP = ? WHERE id = ?",(aportdep,numvol))
+            cursor.execute("UPDATE flight SET APORTDEP = ? WHERE id = ?",(aportdep,numv))
         if aportarr:
-            cursor.execute("UPDATE flight SET APORTARR = ? WHERE id = ?",(aportarr,numvol))
+            cursor.execute("UPDATE flight SET APORTARR = ? WHERE id = ?",(aportarr,numv))
         if hdep:
-            cursor.execute("UPDATE flight SET HDEP = ? WHERE id =?",(hdep,numvol))
+            cursor.execute("UPDATE flight SET HDEP = ? WHERE id =?",(hdep,numv))
         if durvol:
-            cursor.execute("UPDATE flight SET durvol =? WHERE id =?",(durvol,numvol))
+            cursor.execute("UPDATE flight SET durvol =? WHERE id =?",(durvol,numv))
         if jvol:
-            cursor.execute("UPDATE flight SET jvol = ? WHERE id = ?",(jvol,numvol))
+            cursor.execute("UPDATE flight SET jvol = ? WHERE id = ?",(jvol,numv))
         conn.commit()
         conn.close() 
 
@@ -148,33 +148,33 @@ class Vol:
             return rows
         return None                       
     
-    def check_airport_exists(codev):
-       conn=Vol.get_db_connection()
-       cursor=conn.cursor()
-
-       cursor.execute("SELECT 1 FROM airport WHERE CODEV = ?", (codev,))
-       result = cursor.fetchone()
-       conn.close()
-
-       return result is not None
+    '''THIS IS JUST FOR DESIGN FEATURES '''
+    @staticmethod
+    def get_all_airport_code():
+        conn=Vol.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT CODEV FROM airport")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None
     
-    def aircraft_is_available(numvol):
-       conn=Vol.get_db_connection()
-       cursor=conn.cursor()
+    @staticmethod
+    def get_all_aircraft_ID():
+     conn=Vol.get_db_connection()
+     cursor=conn.cursor()
+     try:
+        # Query example for SQLAlchemy
+        results = cursor.execute("SELECT NUMAV FROM aircraft").fetchall()
 
-       cursor.execute("SELECT status FROM aircraft WHERE NUMAV =?",(numvol,))
-       result=cursor.fetchone()
+        # Convert the results into a simple list
+        aircraft_ids = [result[0] for result in results]  # Extract the ID from each tuple
 
-       if result:
-           return result[0]
-       return None
-    
-    def aircraft_exists(numav):
-       conn=Vol.get_db_connection()
-       cursor=conn.cursor()
+        if not aircraft_ids:
+            raise ValueError("No aircraft available")
+        return aircraft_ids
 
-       cursor.execute("SELECT 1 FROM aircraft WHERE NUMAV = ?", (numav,))
-       result = cursor.fetchone()
-       conn.close()
-
-       return result is not None
+     except Exception as e:
+        print(f"Error fetching aircraft IDs: {e}")
+        return []

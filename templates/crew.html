@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f8f9fa;
@@ -117,6 +117,65 @@
             font-size: 14px;
             color: #666;
         }
+        select {
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+        option {
+          padding: 10px;
+          font-size: 16px;
+        }
+        .date-picker {
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 5px;
+          font-size: 16px;
+          transition: border-color 0.3s ease;
+        }
+      
+        .date-picker:focus {
+          border-color: #4CAF50;
+          outline: none;
+        }
+      
+        .suggestions {
+          margin-top: 10px;
+          display: none; /* Hidden by default */
+          position: absolute;
+          width: 100%;
+          background-color: white;
+          border: 1px solid #ddd;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          max-height: 150px;
+          overflow-y: auto;
+          z-index: 10;
+          border-radius: 5px;
+        }
+      
+        .suggestions ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+      
+        .suggestions li {
+          padding: 10px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+      
+        .suggestions li:hover {
+          background-color: #f0f0f0;
+        }
+      
+        .suggestions li.selected {
+          background-color: #4CAF50;
+          color: white;
+        }
     </style>
   </head>
   <body>
@@ -173,7 +232,9 @@
     <h2>Add Crew Member</h2>
     <form method="POST">
       <label for="flight_id">Flight ID:</label>
-      <input type="text" id="flight_id" name="flight_id" placeholder="e.g., 42" pattern="^-?\d+$"  title="Please enter a whole number." required />
+      <select id="flight_id" name="flight_id" required>
+        <option value="" disabled selected>Select Flight ID</option>
+      </select>
       <label for="nom">Name:</label>
       <input type="text" id="nom" name="nom" required />
       <label for="prenom">Last name:</label>
@@ -193,10 +254,13 @@
       <label for="function">Function:</label>
       <input type="text" id="function" name="function" required />
       <label for="datemb">Hire Date:</label>
-      <input type="text" id="datemb" name="datemb" placeholder="YYYY-MM-DD"
-      pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" 
-      title="Please enter a valid date in the format YYYY-MM-DD (e.g., 2023-12-31)."
-       required />
+      <input type="date" id="datemb" name="datemb" class="date-picker" required />
+      <div class="suggestions">
+        <ul id="date-suggestions">
+        </ul>
+        </div>  
+      <br>
+      <br>  
       <button type="submit">Add Crew Member</button>
     </form>
     {% if context.error %}
@@ -209,8 +273,37 @@
     {% elif context.view == "update" %}
     <h2>Edit Crew Member</h2>
     <form method="POST">
-      <label for="new_id">New ID:</label>
-      <input type="text" id="new_id" name="new_id" value="{{ context.crew_member.NUMEMP }}" required />
+      <label for="new_id">Flight ID:</label>
+      <select id="new_id" name="new_id" value="{{context['crew_member'][0][1]}}" >
+        <option value="" disabled selected>Select Flight ID</option>
+      </select>
+      <label for="new_nom">Name:</label>
+      <input type="text" id="new_nom" name="new_nom" value="{{context['crew_member'][0][2]}}" >
+      <label for="new_prenom">Last name:</label>
+      <input type="text" id="new_prenom" name="new_prenom" value="{{context['crew_member'][0][3]}}">
+      <label for="new_email">Email:</label>
+      <input type="text" id="new_email" name="new_email" value="{{context['crew_member'][0][4]}}" >
+      <label for="new_password">Password:</label>
+      <input type="text" id="new_password" name="new_password" value="{{context['crew_member'][0][5]}}" >
+      <label for="new_tel">Phone Number:</label>
+      <input type="text" id="new_tel" name="new_tel" value="{{context['crew_member'][0][6]}}" >
+      <label for="new_ville">City:</label>
+      <input type="text" id="new_ville" name="new_ville" value="{{context['crew_member'][0][7]}}" >
+      <label for="new_adresse">Adress:</label>
+      <input type="text" id="new_adresse" name="new_adresse" value="{{context['crew_member'][0][8]}}" >
+      <label for="new_salaire">Salary:</label>
+      <input type="text" id="new_salaire" name="new_salaire" value="{{context['crew_member'][0][9]}}" >
+      <label for="new_function">Function:</label>
+      <input type="text" id="new_function" name="new_function" value="{{context['crew_member'][0][10]}}" >
+      <label for="new_datemb">Hire Date:</label>
+      <input type="date" id="new_datemb" name="datemb" class="date-picker" value="{{context['crew_member'][0][11]}}" >
+      <div class="suggestions">
+        <ul id="date-suggestions">
+        </ul>
+        </div>  
+      <br>
+      <br>  
+
       <button type="submit">Update</button>
     </form>
 
@@ -220,14 +313,15 @@
     <div class="details-card">
       <table>
         <tr><th>ID</th><td>{{context["crew_member"][0][0]}}</td></tr>
-        <tr><th>Name</th><td>{{context["crew_member"][0][1]}}</td></tr>
-        <tr><th>Last Name</th><td>{{context["crew_member"][0][2]}}</td></tr>
-        <tr><th>Email</th><td>{{context["crew_member"][0][3]}}</td></tr>
-        <tr><th>Phone Number</th><td>{{context["crew_member"][0][4]}}</td></tr>
-        <tr><th>Function</th><td>{{context["crew_member"][0][5]}}</td></tr>
-        <tr><th>Hire Date</th><td>{{context["crew_member"][0][6]}}</td></tr>
-        <tr><th>NBMHV</th><td>{{context["crew_member"][0][7]}}</td></tr>
-        <tr><th>NBTHV</th><td>{{context["crew_member"][0][8]}}</td></tr>
+        <tr><th>Flight ID</th><td>{{context["crew_member"][0][1]}}</td></tr>
+        <tr><th>Name</th><td>{{context["crew_member"][0][2]}}</td></tr>
+        <tr><th>Last Name</th><td>{{context["crew_member"][0][3]}}</td></tr>
+        <tr><th>Email</th><td>{{context["crew_member"][0][4]}}</td></tr>
+        <tr><th>Phone Number</th><td>{{context["crew_member"][0][5]}}</td></tr>
+        <tr><th>Function</th><td>{{context["crew_member"][0][6]}}</td></tr>
+        <tr><th>Hire Date</th><td>{{context["crew_member"][0][7]}}</td></tr>
+        <tr><th>NBMHV</th><td>{{context["crew_member"][0][8]}}</td></tr>
+        <tr><th>NBTHV</th><td>{{context["crew_member"][0][9]}}</td></tr>
       </table>
       <div class="action-links">
         <a href="{{ url_for('crew_routes.crew', action='update', id=context['crew_member'][0][0]) }}">Edit</a>
@@ -238,6 +332,29 @@
     </div>
     {%endif%}
   {% endif %}
-
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchDropdownData("flight", "flight_id");
+    });
+    function fetchDropdownData(field, selectId) {
+        fetch(`/get_dropdown_data?field=${field}`)
+            .then(response => response.json())
+            .then(data => {
+                const selectElement = document.getElementById(selectId);
+                selectElement.innerHTML = `<option value="" disabled selected>Select ${capitalizeFirstLetter(field)} ID</option>`;
+                
+                data.dropdown_data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item;
+                    option.textContent = item;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching dropdown data:", error));
+    }
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+</script>
   </body>
 </html>

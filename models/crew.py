@@ -34,7 +34,7 @@ class Crew():
     def get_crew_by_id(crew_id):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("SELECT e.NUMEMP,e.NOM,e.prenom,e.email,e.tel,e.FONCTION,e.datemb,e.NBMHV,e.NBTHV FROM employees e WHERE e.NUMEMP=?", (crew_id,))
+        db.execute("""SELECT e.NUMEMP, ev.NUMVOL, e.NOM, e.prenom, e.email, e.tel, e.FONCTION, e.datemb, e.NBMHV, e.NBTHV FROM employees e JOIN employee_vol ev ON e.NUMEMP = ev.NUMEMP WHERE e.NUMEMP=?""",(crew_id,))
         rows = db.fetchall()
         conn.close()
         if rows:
@@ -52,10 +52,31 @@ class Crew():
         conn.close()
 
     @staticmethod
-    def update_crew(crew_id, new_id,newflight,newnom,newprenom,newemai):
+    def update_crew(crew_id, new_id,new_name,new_prenom,new_email,new_password,new_tel,new_ville,new_address,new_salaire,new_function,new_datemb):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("UPDATE employee_vol SET NUMEMP= ? WHERE NUMEMP=?", (new_id,crew_id))
+        if new_id:
+         db.execute("UPDATE employee_vol SET NUMVOL= ? WHERE NUMEMP=?", (new_id,crew_id))
+        if new_name:
+            db.execute("UPDATE employees SET NOM= ? WHERE NUMEMP=?", (new_name,crew_id))
+        if new_prenom:
+            db.execute("UPDATE employees SET prenom= ? WHERE NUMEMP=?", (new_prenom,crew_id))
+        if new_email:
+            db.execute("UPDATE employees SET email= ? WHERE NUMEMP=?", (new_email,crew_id))
+        if new_password:
+            db.execute("UPDATE employees SET password= ? WHERE NUMEMP=?", (new_password,crew_id))
+        if new_tel:
+            db.execute("UPDATE employees SET tel= ? WHERE NUMEMP=?", (new_tel,crew_id))
+        if new_ville:
+            db.execute("UPDATE employees SET ville= ? WHERE NUMEMP=?", (new_ville,crew_id))
+        if new_address:
+            db.execute("UPDATE employees SET adresse= ? WHERE NUMEMP=?", (new_address,crew_id))
+        if new_salaire:
+            db.execute("UPDATE employees SET salaire= ? WHERE NUMEMP=?", (new_salaire,crew_id))
+        if new_function:
+            db.execute("UPDATE employees SET FONCTION= ? WHERE NUMEMP=?", (new_function,crew_id))
+        if new_datemb:
+            db.execute("UPDATE employees SET datemb= ? WHERE NUMEMP=?", (new_datemb,crew_id))                        
         conn.commit()
         conn.close()
 
@@ -97,3 +118,15 @@ class Crew():
        conn.close()
 
        return result is not None
+    
+    @staticmethod
+    def get_all_flights():
+       conn=Crew.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT id FROM flight")
+       result = cursor.fetchall()
+       conn.close()
+       if result:
+           return result
+       return None

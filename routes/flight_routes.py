@@ -1,12 +1,19 @@
-from flask import Flask,render_template,request,Blueprint,redirect,url_for
+from flask import Flask,render_template,request,Blueprint,redirect,url_for,jsonify
 from models.flight import Vol
 flight_routes=Blueprint("flight_routes",__name__)
+
+def get_aircraft_dropdown_data():
+    aircrafts = Vol.get_all_aircraft_ID()  # Fetch aircraft data from DB
+    if not aircrafts:
+        return []  # Return empty list if no aircraft data found
+    return aircrafts  # Return aircraft data if found
+
+
 
 @flight_routes.route("/flight", methods=["GET", "POST"])
 def flight():
     action = request.args.get("action", "list")
     flight_id = request.args.get("id", type=int)
-    departure = request.form.get("departure", "")
     day = request.form.get("day","")
     depart=request.form.get("depart","")
     hddep=request.form.get("hddep","")
@@ -44,18 +51,6 @@ def flight():
             if not all([departure_airport, arrival_airport, departure_time, flight_duration, day_of_week]):
                 context["error"] = "All fields except are required!"
                 return render_template("flight.html", context=context)
-            if not Vol.check_airport_exists(departure_airport):
-               context["error2"]="Departure airport code doesn't exists !,check airports !"
-               return render_template("flight.html",context=context)
-            if not Vol.check_airport_exists(arrival_airport):
-               context["error5"]="Arrive airport code doesn't exists !,check airports !"
-               return render_template("flight.html",context=context)
-            if not Vol.aircraft_exists(numv):
-               context["error6"]="Aircraft ID doesn't exists !,check aircrafts !"
-               return render_template("flight.html",context=context)
-            if Vol.aircraft_is_available(numv) != 'Available' :
-               context["available"]="Aircraft is "+Vol.aircraft_is_available(numv)+" !"
-               return render_template("flight.html",context=context)
             Vol.create_vol(numv,departure_airport, arrival_airport, departure_time, 
                          flight_duration, day_of_week)
             return redirect(url_for('flight_routes.flight', action='list'))
@@ -64,34 +59,49 @@ def flight():
         context["view"] = "update"
         context["flight"] = Vol.get_vol(flight_id)
         if request.method == "POST":
-            numaav=request.form.get("numaav")
+            numav=request.form.get("numav")
             aportdep = request.form.get("departure")
             aportarr = request.form.get("destination") 
             hdep = request.form.get("hdep")
             durvol = request.form.get("duration")
             jvol = request.form.get("date")
-            if aportdep:
-             if not Vol.check_airport_exists(aportdep):
-               context["error3"]="Departure airport code doesn't exists !,check airports !"
-               return render_template("flight.html",context=context)
-            if aportarr:
-               if not Vol.check_airport_exists(aportarr):
-                   context["error4"]=" Arrive airport code doesn't exists !,check airports !"
-                   return render_template("flight.html",context=context)
-            if numaav:
-               if not Vol.aircraft_exists(numaav):
-                 context["error8"]="Aircraft ID doesn't exists !,check aircrafts !"
-                 return render_template("flight.html",context=context)
-               if Vol.aircraft_is_available(numaav) != 'Available' :
-                 context["available2"]="Aircraft is "+Vol.aircraft_is_available(numaav)+" !"
-                 return render_template("flight.html",context=context)
-            Vol.update_vol(numaav,flight_id, aportdep, aportarr, hdep, durvol, jvol)
+
+            Vol.update_vol(flight_id,numav, aportdep, aportarr, hdep, durvol, jvol)
             return redirect(url_for('flight_routes.flight', action='details', id=flight_id))
 
     elif action == "delete" and flight_id and request.method == "POST":
         Vol.delete_vol(flight_id)
         return redirect(url_for('flight_routes.flight', action='list'))
     
-    
     return render_template("flight.html", context=context)
 
+def get_dropdown_data():
+    field = request.args.get('field')
+    print(f"Received field: {field}")  # Debug the received field
+
+    if field == "aircraft":
+        # Get aircraft dropdown data using the helper function
+        dropdown_data = get_aircraft_dropdown_data()
+    elif field == "airport":
+        airports = Vol.get_all_airport_code()
+        print(f"Airports fetched from DB: {airports}")  # Debug DB response
+        dropdown_data = [airport[0] for airport in airports]
+    else:
+        dropdown_data = []
+
+    print(f"Dropdown Data: {dropdown_data}")  # Debug final data
+    return jsonify({"dropdown_data": dropdown_data})
+
+@flight_routes.route("/get_aircraft_dropdown", methods=["GET"])
+def get_aircraft_dropdown():
+    try:
+        aircrafts = Vol.get_all_aircraft_ID() 
+
+        if not aircrafts:
+            raise ValueError("No aircraft available")
+
+        return jsonify({"dropdown_data": aircrafts})  
+
+    except Exception as e:
+        print(f"Error in /get_aircraft_dropdown route: {e}")
+        return jsonify({"error": str(e)}), 500  

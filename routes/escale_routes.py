@@ -39,12 +39,6 @@ def escale():
             if not all([airport_code, arrival_time, stop_duration, stop_order, flight_number]):
                 context["error"] = "All fields are required to create an escale!"
                 return render_template("escale.html", context=context)
-            if not Escale.check_airport_exists(airport_code):
-                context["error2"] ="Airport code doesn't exists!,check airports"
-                return render_template("escale.html", context=context)
-            if not Escale.check_flight_exists(flight_number):
-                context["error4"]="Flight ID doesn't exists !"
-                return render_template("escale.html",context=context)
             Escale.create_escale(airport_code, arrival_time, stop_duration, stop_order, flight_number)
             return redirect(url_for('escale_routes.escale', action='list'))
 
@@ -57,9 +51,6 @@ def escale():
             stop_duration = request.form.get("DURESC")
             stop_order = request.form.get("NOORD")
 
-            if not Escale.check_airport_exists(airport_code):
-                context["error3"] ="Airport code doesn't exists!,check airports"
-                return render_template("escale.html", context=context)
             Escale.update_escale(escale_id, airport_code, arrival_time, stop_duration, stop_order)
             return redirect(url_for('escale_routes.escale', action='details', id=escale_id))
 
@@ -68,3 +59,18 @@ def escale():
         return redirect(url_for('escale_routes.escale', action='list'))
 
     return render_template("escale.html", context=context)
+
+@escale_routes.route("/get_dropdown_data", methods=["GET"])
+def get_dropdown_data():
+    field = request.args.get("field", "")
+
+    if field == "flight":
+        flights = Escale.get_all_flights()
+        dropdown_data = [flight[0] for flight in flights]
+    elif field == "airport":
+        airports = Escale.get_all_airport_code()
+        dropdown_data = [airport[0] for airport in airports]
+    else:
+        dropdown_data = []
+
+    return {"dropdown_data": dropdown_data}

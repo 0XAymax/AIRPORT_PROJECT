@@ -113,8 +113,30 @@ class Escale:
        conn=Escale.get_db_connection()
        cursor=conn.cursor()
 
-       cursor.execute("SELECT 1 FROM Vol WHERE NUMVOL = ?", (numvol,))
+       cursor.execute("SELECT 1 FROM flight WHERE id = ?", (numvol,))
        result = cursor.fetchone()
        conn.close()
 
        return result is not None
+    
+    @staticmethod
+    def get_all_airport_code():
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT CODEV FROM airport")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None
+    
+    @staticmethod
+    def get_all_flights():
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT id FROM flight")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None

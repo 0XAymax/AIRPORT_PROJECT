@@ -111,6 +111,19 @@
         button:hover {
             background-color: #1368c3;
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        option {
+            padding: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -127,7 +140,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Aircraft ID</th>
                     <th>Departure</th>
                     <th>Destination</th>
                     <th>Action</th>
@@ -196,11 +209,20 @@
         <h2>Create New Flight</h2>
         <form method="POST">
             <label for="numav">Aircraft ID:</label>
-            <input type="text" id="numav" name="numav" placeholder="e.g., 12" pattern="^-?\d+$" required>
+            <select id="numav" name="numav" required>
+                <option value="" disabled selected>Select Aircraft ID</option>
+                <!-- Aircraft options will be populated by JavaScript -->
+            </select>
             <label for="departure">Departure Code:</label>
-            <input type="text" id="departure" name="departure" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" required>
+            <select id="departure" name="departure" required>
+                <option value="" disabled selected>Select Departure Airport</option>
+                <!-- Departure options will be populated by JavaScript -->
+            </select>
             <label for="destination">Destination Code:</label>
-            <input type="text" id="destination" name="destination" placeholder="e.g:JFX" pattern="^[A-Z]{3}$" required>
+            <select id="destination" name="destination" required>
+                <option value="" disabled selected>Select Arrival Airport</option>
+                <!-- Arrival options will be populated by JavaScript -->
+            </select>
             <label for="depart_time">Departure time:</label>
             <input type="text" id="depart_time" name="depart_time" placeholder="HH:MM"
             pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
@@ -229,30 +251,38 @@
         {% if context.error %}
             <p style="color:red;">{{ context.error }}</p>
         {% endif %}
-        {% if context.error2 %}
-            <p style="color:red;">{{ context.error2 }}</p>
-        {% endif %}
-        {% if context.error5 %}
-            <p style="color:red;">{{ context.error5 }}</p>
-        {% endif %}
-        {% if context.error6 %}
-            <p style="color:red;">{{ context.error6 }}</p>
-        {% endif %}
-        {% if context.available %}
-            <p style="color:red;">{{ context.available }}</p>
-        {% endif %}
         
-
     {% elif context.view == "update" %}
         <h2>Update Flight</h2>
         {% if context.flight %}
             <form method="POST">
-                <label for="numaav">Aircraft ID:</label>
-                <input type="text" id="numaav" name="numaav" placeholder="e.g., 12" pattern="^-?\d+$" >
+                <label for="numav">Aircraft ID:</label>
+                <select id="numav" name="numav">
+                    <option value="" disabled selected>Select Aircraft ID</option>
+                    {% for aircraft in context.aircrafts %}
+                        <option value="{{ aircraft }}" {% if aircraft == context.flight.NUMAV %}selected{% endif %}>
+                            {{ aircraft }}
+                        </option>
+                    {% endfor %}
+                </select>
                 <label for="departure">Departure Code:</label>
-                <input type="text" id="departure" name="departure" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" value="{{ context.flight.APORTDEP }}" >
+                <select id="departure" name="departure">
+                    <option value="" disabled selected>Select Departure Code</option>
+                    {% for airport in context.airports %}
+                        <option value="{{ airport }}" {% if airport == context.flight.APORTDEP %}selected{% endif %}>
+                            {{ airport }}
+                        </option>
+                    {% endfor %}
+                </select>
                 <label for="destination">Destination Code:</label>
-                <input type="text" id="destination" name="destination" placeholder="e.g:JFX" pattern="^[A-Z]{3}$" value="{{ context.flight.APORTARR }}" >
+                <select id="destination" name="destination">
+                    <option value="" disabled selected>Select Destination Code</option>
+                    {% for airport in context.airports %}
+                        <option value="{{ airport }}" {% if airport == context.flight.APORTARR %}selected{% endif %}>
+                            {{ airport }}
+                        </option>
+                    {% endfor %}
+                </select>
                 <label for="hdep">Departure time:</label>
                 <input type="text" id="hdep" name="hdep"  placeholder="HH:MM"
                 pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
@@ -269,18 +299,6 @@
             </form>
         {% else %}
             <p>Flight not found.</p>
-        {% endif %}
-        {% if context.error3 %}
-            <p style="color:red;">{{ context.error3 }}</p>
-        {% endif %}
-        {% if context.error4 %}
-            <p style="color:red;">{{ context.error4 }}</p>
-        {% endif %}
-        {% if context.error8 %}
-            <p style="color:red;">{{ context.error8 }}</p>
-        {% endif %}
-        {% if context.available2 %}
-            <p style="color:red;">{{ context.available2 }}</p>
         {% endif %}
         {% elif context.view == "search" %}
         <h2>Search Flight</h2>
@@ -336,5 +354,112 @@
             <p style="color:red;">{{ context.error }}</p>
         {% endif %}   
     {% endif %}
+    <div id="error-message" style="display:none; color:red; margin-top:20px;"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.getElementById("numav") && document.getElementById("departure") && document.getElementById("destination")) {
+                console.log("DOM loaded");
+                fetchAircraftDropdown();  // Fetch aircraft dropdown
+                fetchDropdownData("airport", "departure");  // Fetch airport dropdown for departure
+                fetchDropdownData("airport", "destination");  // Fetch airport dropdown for destination
+            }
+        });
+    
+        // New function to fetch aircraft data specifically
+        function fetchAircraftDropdown() {
+            console.log("Fetching aircraft data for numav dropdown");
+    
+            fetch('/get_aircraft_dropdown')  // Route for fetching aircraft data
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.dropdown_data || !Array.isArray(data.dropdown_data)) {
+                        throw new Error(`Invalid data format: ${JSON.stringify(data)}`);
+                    }
+                    console.log("Received aircraft data:", data);
+                    updateDropdown("numav", "aircraft", data.dropdown_data);  // Update numav dropdown
+                })
+                .catch(error => {
+                    console.error("Error fetching aircraft data:", error);
+                    displayError("Failed to load aircraft data. Please try again later.");
+                });
+        }
+    
+        // Modified function to fetch other dropdown data (for airports)
+        function fetchDropdownData(field, selectId) {
+            console.log(`Fetching ${field} data for ${selectId}`);
+    
+            fetch(`/get_dropdown_data?field=${field}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.dropdown_data || !Array.isArray(data.dropdown_data)) {
+                        throw new Error(`Invalid data format: ${JSON.stringify(data)}`);
+                    }
+                    console.log(`Received data for ${field}:`, data);
+                    updateDropdown(selectId, field, data.dropdown_data);
+                })
+                .catch(error => {
+                    console.error(`Error fetching ${field} data:`, error);
+                    displayError(`Failed to load ${field} data. Please try again later.`);
+                });
+        }
+    
+        // Function to display an error message
+        function displayError(message) {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+    
+        // Function to update the dropdown options
+        function updateDropdown(selectId, field, items) {
+            const select = document.getElementById(selectId);
+            if (!select) {
+                console.error(`Select element ${selectId} not found`);
+                return;
+            }
+    
+            // Clear existing options
+            select.innerHTML = '';
+    
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = `Select ${capitalizeFirstLetter(field)}`;
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+    
+            // Handle case when no data is available
+            if (items.length === 0) {
+                const noDataOption = document.createElement('option');
+                noDataOption.value = '';
+                noDataOption.textContent = `No ${field} available`;
+                noDataOption.disabled = true;
+                select.appendChild(noDataOption);
+                return;
+            }
+
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                select.appendChild(option);
+            });
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>    
 </body>
 </html>

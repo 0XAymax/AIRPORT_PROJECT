@@ -112,6 +112,19 @@
         button:hover {
             background-color: #1368c3;
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        option {
+            padding: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -209,7 +222,9 @@
         <h2>Create Escale</h2>
         <form method="POST" action="/escale?action=create">
             <label for="APORTESC">Airport Code:</label>
-            <input type="text" name="APORTESC" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" required>
+            <select id="APORTESC" name="APORTESC" required>
+                <option value="" disabled selected>Select Airport ID</option>
+            </select>
             <label for="HARRESC">Arrival Time:</label>
             <input type="text" name="HARRESC" placeholder="HH:MM" 
             pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
@@ -222,15 +237,14 @@
             <label for="NOORD">Stop Order:</label>
             <input type="text" name="NOORD" step="1" placeholder="e.g., 1" pattern="^-?\d+$" title="Please enter a valid number."  required>
             <label for="NUMVOL">Flight Number:</label>
-            <input type="text" name="NUMVOL" placeholder="e.g., 42" pattern="^-?\d+$" title="Please enter a valid number."  required>
+            <select id="NUMVOL" name="NUMVOL" required>
+                <option value="" disabled selected>Select Flight ID</option>
+            </select>
             <button type="submit">Create</button>
         </form>
-        {% if context.error2 %}
-           <p style="color:red;">{{ context.error2 }}</p>
+        {% if context.error %}
+           <p style="color:red;">{{ context.error }}</p>
         {% endif %} 
-        {% if context.error4 %}
-           <p style="color:red;">{{ context.error4 }}</p>
-        {% endif %}
     {% elif context.view == "search" %}
         <h2>Search Escale</h2>
         <form method="POST">
@@ -276,7 +290,9 @@
         {% if context.escale %}
         <form method="POST" >
             <label for="APORTESC">Airport Code:</label>
-            <input type="text" name="APORTESC" placeholder="e.g:LAX" pattern="^[A-Z]{3}$" value="{{ context.escale.APORTESC }}" >
+            <select id="APORTESC" name="APORTESC" value="{{ context.escale.APORTESC }}" >
+                <option value="" disabled selected>Select Aircraft ID</option>
+            </select> 
             <label for="HARRESC">Arrival Time:</label>
             <input type="text" name="HARRESC" placeholder="HH:MM" 
             pattern="^([01]\d|2[0-3]):([0-5]\d)$" 
@@ -291,10 +307,34 @@
         {% else %}
              <p>Escale not found.</p>
         {% endif %}
-        {% if context.error3 %}
-        <p style="color:red;">{{ context.error3 }}</p>
-        {% endif %}  
 
     {% endif %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchDropdownData("airport", "APORTESC");
+        
+            fetchDropdownData("flight", "NUMVOL");
+
+        });
+        function fetchDropdownData(field, selectId) {
+            fetch(`/get_dropdown_data?field=${field}`)
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.getElementById(selectId);
+                    selectElement.innerHTML = `<option value="" disabled selected>Select ${capitalizeFirstLetter(field)} ID</option>`;
+                    
+                    data.dropdown_data.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item;
+                        option.textContent = item;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching dropdown data:", error));
+        }
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for,session
 from login_form import loginform  
 import sqlite3
 
@@ -27,7 +27,7 @@ def login():
         conn.close()
 
         if user:
-            flash('Login successful!', 'success')
+            session['user_id'] = user['NUMEMP']
             return redirect(url_for('auth.home')) 
         else:
             flash('Invalid email or password. Please try again.', 'danger')
@@ -38,3 +38,9 @@ def login():
 @auth_blueprint.route('/home')
 def home():
     return render_template("home.html")
+
+@auth_blueprint.route('/logout')
+def logout():
+    session.pop('user_id', None)  
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('auth.login')) 
