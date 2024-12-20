@@ -16,7 +16,16 @@ class Crew():
     def get_all_crew():
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("SELECT e.NUMEMP,e.NUMVOL,v.APORTDEP,v.APORTARR,v.HDEP,v.durvol,v.jvol FROM employee_vol e,vol v WHERE e.NUMVOL=v.NUMVOL")
+        db.execute("""SELECT ev.NUMEMP AS NUMEMP,e.NOM AS name,e.prenom AS last_name,
+        e.email AS email,f.NUMVOL AS flight_number,f.APORTDEP AS departure_airport,
+        f.APORTARR AS arrival_airport,f.HDEP AS departure_time
+        FROM 
+        employee_vol ev
+        JOIN 
+        employees e ON ev.NUMEMP = e.NUMEMP
+        JOIN 
+        flight f ON ev.NUMVOL = f.id;
+        """)
         rows = db.fetchall()
         conn.close()
         return rows
@@ -72,7 +81,18 @@ class Crew():
        conn=Crew.get_db_connection()
        cursor=conn.cursor()
 
-       cursor.execute("SELECT 1 FROM Vol WHERE NUMVOL = ?", (numvol,))
+       cursor.execute("SELECT 1 FROM flight WHERE id = ?", (numvol,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None
+    
+    @staticmethod
+    def check_email_exists(email):
+       conn=Crew.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM employees WHERE email = ?", (email,))
        result = cursor.fetchone()
        conn.close()
 

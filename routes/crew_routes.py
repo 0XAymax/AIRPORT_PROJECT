@@ -34,7 +34,10 @@ def crew():
             if not Crew.check_flight_exists(flight_id):
                 context["error"]="Flight ID doesn't exists !,check filghts"
                 return render_template("crew.html",context=context)
-
+            if Crew.check_email_exists(email):
+                context["error2"]="Email Already Exists !"
+                return render_template("crew.html",context)
+            
             Crew.create_crew(email,passw,nom,prenom,tel,ville,address,salaire,function,datemb)
             Crew.insert_crew_member(email,flight_id)
             return redirect(url_for("crew_routes.crew", action="list"))

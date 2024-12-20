@@ -134,12 +134,13 @@
       <thead>
         <tr>
           <th>ID</th>
+          <th>Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
           <th>Flight ID</th>
-          <th>Departure</th>
-          <th>Destination</th>
+          <th>Departure Airport</th>
+          <th>Arrival Airport</th>
           <th>Departure Time</th>
-          <th>Duration</th>
-          <th>Day</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -153,6 +154,7 @@
           <td>{{ crew_member[4] }}</td>
           <td>{{ crew_member[5] }}</td>
           <td>{{ crew_member[6] }}</td>
+          <td>{{ crew_member[7] }}</td>
           <td>
             <div class="action-links">
               <a href="{{ url_for('crew_routes.crew', action='details', id=crew_member['NUMEMP']) }}">View</a>
@@ -199,6 +201,9 @@
     </form>
     {% if context.error %}
         <p style="color:red;">{{ context.error }}</p>
+    {% endif %}
+    {% if context.error2 %}
+        <p style="color:red;">{{ context.error2 }}</p>
     {% endif %}
 
     {% elif context.view == "update" %}
