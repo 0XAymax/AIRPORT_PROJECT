@@ -115,3 +115,13 @@ class Aircraft:
         cursor.execute("DELETE FROM aircraft WHERE NUMAV = ?", (numav,))
         conn.commit()
         conn.close()
+        
+    @staticmethod
+    def get_by_status(name):
+        conn = Aircraft.get_db_connection()
+        cursor =conn.cursor()
+        cursor.execute("SELECT * FROM aircraft WHERE status = ?",(name,))
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows    

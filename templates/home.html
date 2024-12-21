@@ -3,66 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft Management System</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <title>Air France Management System</title>
+    <style>
+        :root {
+            --airfrance-blue: #002157;
+            --airfrance-red: #EF3340;
+            --light-gray: #f5f5f5;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--light-gray);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .header {
+            background: var(--airfrance-blue);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .dark-mode .welcome-section {
+            background: #2d2d2d;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            overflow: hidden;
+        }
+
+        .dark-mode .card {
+            background: #2d2d2d;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            background: var(--airfrance-blue);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .card-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: white;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: var(--airfrance-blue);
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+        }
+
+        .dark-mode .card-title {
+            color: #fff;
+        }
+
+        .card-text {
+            color: #666;
+            margin: 0 0 1.5rem 0;
+            line-height: 1.5;
+        }
+
+        .dark-mode .card-text {
+            color: #ccc;
+        }
+
+        .btn {
+            background: var(--airfrance-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color var(--transition-speed);
+        }
+
+        .btn:hover {
+            background: #003380;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background: var(--airfrance-blue);
+            color: white;
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <header class="navbar">
-        <h1>Aircraft Management System</h1>
-        {% if session.get('user_id') %}
-            <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">Log Out</a>
-        {% endif %}
+    <header class="header">
+        <div class="header-content">
+            <h1>Air France Management System</h1>
+            <button class="toggle-btn" id="toggle-dark-mode">Toggle Dark Mode</button>
+        </div>
     </header>
 
-    <main class="container">
-        <section class="hero">
-            <h2>Welcome to the Aircraft Management System</h2>
-            <p>Manage aircraft, escales, and maintenance operations seamlessly.</p>
-        </section>
+    <main>
+        <div class="container">
+            <section class="welcome-section">
+                <h2>Welcome to the Air France Management System</h2>
+                <p>Streamline your aviation operations with our comprehensive management tools.</p>
+            </section>
 
-        <section class="cards">
-            <div class="card">
-                <h3>Escale Management</h3>
-                <p>View and manage escale operations for flights.</p>
-                <a href="/escale" class="btn">Go to Escales</a>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 16v-2l-8.5-5V3.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5V9L2 14v2l8.5-2.5V19L8 20.5V22l4-1 4 1v-1.5L13.5 19v-5.5L22 16z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Flight Management</h3>
+                        <p class="card-text">Track and manage flight schedules, routes, and real-time status updates.</p>
+                        <a href="/flight" class="btn">Manage Flights</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Aircraft Management</h3>
+                        <p class="card-text">Monitor and maintain aircraft fleet information and maintenance schedules.</p>
+                        <a href="/aircraft" class="btn">Manage Aircraft</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Employee Management</h3>
+                        <p class="card-text">Handle employee information, schedules, and role assignments efficiently.</p>
+                        <a href="/hr" class="btn">Manage Employees</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Airport Management</h3>
+                        <p class="card-text">Oversee airport operations, terminal assignments, and runway scheduling.</p>
+                        <a href="/airport" class="btn">Manage Airports</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.09-.16-.26-.25-.44-.25-.06 0-.12.01-.17.03l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.06-.02-.12-.03-.18-.03-.17 0-.34.09-.43.25l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.09.16.26.25.44.25.06 0 .12-.01.17-.03l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.06.02.12.03.18.03.17 0 .34-.09.43-.25l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zm-1.98-1.71c.04.31.05.52.05.73 0 .21-.02.43-.05.73l-.14 1.13.89.7 1.08.84-.7 1.21-1.27-.51-1.04-.42-.9.68c-.43.32-.84.56-1.25.73l-1.06.43-.16 1.13-.2 1.35h-1.4l-.19-1.35-.16-1.13-1.06-.43c-.43-.18-.83-.41-1.23-.71l-.91-.7-1.06.43-1.27.51-.7-1.21 1.08-.84.89-.7-.14-1.13c-.03-.31-.05-.54-.05-.74s.02-.43.05-.73l.14-1.13-.89-.7-1.08-.84.7-1.21 1.27.51 1.04.42.9-.68c.43-.32.84-.56 1.25-.73l1.06-.43.16-1.13.2-1.35h1.39l.19 1.35.16 1.13 1.06.43c.43.18.83.41 1.23.71l.91.7 1.06-.43 1.27-.51.7 1.21-1.07.85-.89.7.14 1.13zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Maintenance Management</h3>
+                        <p class="card-text">Schedule and track aircraft maintenance, repairs, and technical inspections.</p>
+                        <a href="/maintanance" class="btn">Manage Maintenance</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Escale Management</h3>
+                        <p class="card-text">Manage stopovers, ground operations, and connection logistics.</p>
+                        <a href="/escale" class="btn">Manage Escales</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="card">
-                <h3>Aircraft Management</h3>
-                <p>Keep track of aircraft details and statuses.</p>
-                <a href="/aircraft" class="btn">Go to Aircrafts</a>
-            </div>
-
-            <div class="card">
-                <h3>Maintenance Logs</h3>
-                <p>Access maintenance schedules and updates.</p>
-                <a href="/maintenance" class="btn">Go to Maintenance</a>
-            </div>
-
-            <!-- New sections added here -->
-
-            <div class="card">
-                <h3>Airport Management</h3>
-                <p>Manage airport operations, terminals, and runways.</p>
-                <a href="/airport" class="btn">Go to Airports</a>
-            </div>
-
-            <div class="card">
-                <h3>Flight Management</h3>
-                <p>Track and manage flight schedules, routes, and statuses.</p>
-                <a href="/flight" class="btn">Go to Flights</a>
-            </div>
-
-            <div class="card">
-                <h3>Employees Management</h3>
-                <p>Manage employee information, roles, and schedules.</p>
-                <a href="/employees" class="btn">Go to Employees</a>
-            </div>
-        </section>
+        </div>
     </main>
 
     <footer class="footer">
-        <p>&copy; 2024 Aircraft Management System. All rights reserved.</p>
+        <p>&copy; 2024 Air France Management System. All rights reserved.</p>
     </footer>
+
+    <script>
+        const toggleDarkMode = document.getElementById('toggle-dark-mode');
+        toggleDarkMode.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
 </body>
 </html>

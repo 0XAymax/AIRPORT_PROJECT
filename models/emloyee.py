@@ -15,7 +15,68 @@ class Employee:
         self.datemb = datemb
         self.NBMHV = NBMHV
         self.NBTHV = NBTHV
-    
+    @classmethod
+    def search_by_filters(cls, name, fonction, min_salary, max_salary, start_date, end_date):
+        query = "SELECT * FROM employees WHERE 1=1"
+        parameters = []
+
+        if name:
+            query += " AND (NOM LIKE ? OR prenom LIKE ?)"
+            parameters.extend([f"%{name}%", f"%{name}%"])
+
+        if fonction:
+            query += " AND FONCTION = ?"
+            parameters.append(fonction)
+
+        if min_salary is not None:
+            query += " AND salaire >= ?"
+            parameters.append(min_salary)
+
+        if max_salary is not None:
+            query += " AND salaire <= ?"
+            parameters.append(max_salary)
+
+        if start_date:
+            query += " AND datemb >= ?"
+            parameters.append(start_date)
+
+        if end_date:
+            query += " AND datemb <= ?"
+            parameters.append(end_date)
+
+        # Execute the query using cursor methods
+        conn = cls.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, parameters)
+        results = cursor.fetchall()
+        conn.close()
+
+        return results
+    @staticmethod
+    def search_employees(name=None, fonction=None):
+        conn = Employee.get_db_connection()
+        cursor = conn.cursor()
+
+        query = "SELECT * FROM employees WHERE 1=1"
+        params = []
+
+        if name:
+            query += " AND (NOM LIKE ? OR prenom LIKE ?)"
+            name_param = f"%{name}%"
+            params.extend([name_param, name_param])
+
+        if fonction:
+            query += " AND FONCTION LIKE ?"
+            params.append(f"%{fonction}%")
+
+        cursor.execute(query, params)
+        employees = cursor.fetchall()
+        conn.close()
+        return employees if employees else []
+
+
+
+
     @staticmethod
     def get_db_connection():
         conn=sqlite3.connect("airplain.db")
