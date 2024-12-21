@@ -2,194 +2,183 @@
 <html lang="en">
   <head>
     <title>Crew Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+       :root {
+            --airfrance-blue: #002157;
+            --airfrance-red: #EF3340;
+            --dark-bg: #1a1a1a;
+            --dark-card-bg: #2d2d2d;
+            --dark-text: #ffffff;
+            --accent-color: #4a90e2;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        .container {
             max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
-
-        h1, h2 {
-            color: #007bff;
-            margin-bottom: 20px;
+        h1, h2, h3 {
+            color: var(--airfrance-blue);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
         }
-
-        nav {
-            background-color: #007bff;
-            padding: 15px;
+        h1::after, h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--airfrance-red);
+            border-radius: 2px;
+        }
+        .navbar {
+            background: var(--airfrance-blue);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+        .navbar a {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 5px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav a {
-            color: white;
+            transition: all var(--transition-speed);
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            transition: background-color 0.3s;
-            font-size: 16px;
         }
-
-        nav a:hover {
-            background-color: #0056b3;
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            color: white;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: white;
-            border-radius: 5px;
+        .table {
+            background: var(--dark-card-bg);
+            color: var(--dark-text);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007bff;
+        .table th {
+            background: var(--airfrance-blue);
             color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .details-card, form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        .action-links a, button {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 5px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 3px;
-            transition: background-color 0.3s;
-            font-size: 14px;
-        }
-
-        .action-links a:hover, button:hover {
-            background-color: #0056b3;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-
-        button {
             border: none;
-            cursor: pointer;
-      
+            padding: 1rem;
         }
-
-        button.delete {
-            background-color: #dc3545;
+        .table td {
+            border-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            vertical-align: middle;
         }
-
-        button.delete:hover {
-            background-color: #c82333;
+        .table-hover tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
-
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
+        .card {
+            background: var(--dark-card-bg);
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            transition: transform var(--transition-speed);
         }
-        select {
-          width: 100%;
-          padding: 10px;
-          margin: 10px 0;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          font-size: 16px;
+        .card:hover {
+            transform: translateY(-5px);
         }
-        option {
-          padding: 10px;
-          font-size: 16px;
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all var(--transition-speed);
         }
-        .date-picker {
-          padding: 10px;
-          border: 2px solid #ddd;
-          border-radius: 5px;
-          font-size: 16px;
-          transition: border-color 0.3s ease;
+        .btn-primary {
+            background: var(--airfrance-blue);
+            border: none;
+            color: white;
         }
-      
-        .date-picker:focus {
-          border-color: #4CAF50;
-          outline: none;
+        .btn-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
         }
-      
-        .suggestions {
-          margin-top: 10px;
-          display: none; /* Hidden by default */
-          position: absolute;
-          width: 100%;
-          background-color: white;
-          border: 1px solid #ddd;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-          max-height: 150px;
-          overflow-y: auto;
-          z-index: 10;
-          border-radius: 5px;
+        .btn-danger {
+            background: var(--airfrance-red);
+            border: none;
         }
-      
-        .suggestions ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
+        .btn-danger:hover {
+            background: #d62b36;
+            transform: translateY(-2px);
         }
-      
-        .suggestions li {
-          padding: 10px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
+        .form-control, select {
+            background: var(--dark-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--dark-text);
+            padding: 0.75rem;
+            border-radius: 5px;
+            transition: all var(--transition-speed);
         }
-      
-        .suggestions li:hover {
-          background-color: #f0f0f0;
+        .form-control:focus, select:focus {
+            background: var(--dark-bg);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.25);
+            color: var(--dark-text);
         }
-      
-        .suggestions li.selected {
-          background-color: #4CAF50;
-          color: white;
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--airfrance-blue);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            .table-responsive {
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
   </head>
   <body>
-    <nav>
+    <nav class="navbar">
       <h1>Crew Management</h1>
       <div>
         <a href="{{ url_for('crew_routes.crew', action='list') }}">Home</a>
         <a href="{{ url_for('crew_routes.crew', action='create') }}">Add Crew Member</a>
       </div>
     </nav>
-
+    <div class="container">
     {% if context.view == "crew_list" %}
     <h2>All Crew Members</h2>
-    <table>
+    <table class="table table-hover">
       <thead>
         <tr>
           <th>ID</th>
@@ -216,10 +205,10 @@
           <td>{{ crew_member[7] }}</td>
           <td>
             <div class="action-links">
-              <a href="{{ url_for('crew_routes.crew', action='details', id=crew_member['NUMEMP']) }}">View</a>
-              <a href="{{ url_for('crew_routes.crew', action='update', id=crew_member['NUMEMP']) }}">Edit</a>
+              <a href="{{ url_for('crew_routes.crew', action='details', id=crew_member['NUMEMP']) }}" class="btn btn-primary">View</a>
+              <a href="{{ url_for('crew_routes.crew', action='update', id=crew_member['NUMEMP']) }}" class="btn btn-primary">Edit</a>
               <form method="POST" action="{{ url_for('crew_routes.crew', action='delete', id=crew_member['NUMEMP']) }}" style="display:inline;">
-                <button class="delete" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
+                <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
               </form>
             </div>
           </td>
@@ -231,41 +220,63 @@
     {% elif context.view == "create" %}
     <h2>Add Crew Member</h2>
     <form method="POST">
-      <label for="flight_id">Flight ID:</label>
-      <select id="flight_id" name="flight_id" required>
-        <option value="" disabled selected>Select Flight ID</option>
-      </select>
-      <label for="nom">Name:</label>
-      <input type="text" id="nom" name="nom" required />
-      <label for="prenom">Last name:</label>
-      <input type="text" id="prenom" name="prenom" required />
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email" required />
-      <label for="password">Password:</label>
-      <input type="text" id="password" name="password" required />
-      <label for="tel">Phone Number:</label>
-      <input type="text" id="tel" name="tel" required />
-      <label for="ville">City:</label>
-      <input type="text" id="ville" name="ville" required />
-      <label for="adresse">Adress:</label>
-      <input type="text" id="adresse" name="adresse" required />
-      <label for="salaire">Salary:</label>
-      <input type="text" id="salaire" name="salaire" required />
-      <label for="function">Function:</label>
-      <select id="function" name="function" required>
-        <option value="" disabled selected>Select a Function</option>
-        <option value="Pilot">Pilot</option>
-        <option value="Flight Attendant">Flight Attendant</option>
-    </select>
-      <label for="datemb">Hire Date:</label>
-      <input type="date" id="datemb" name="datemb" class="date-picker" required />
+      <div class="form-group">
+        <label for="flight_id">Flight ID:</label>
+        <select id="flight_id" name="flight_id" class="form-control" required>
+          <option value="" disabled selected>Select Flight ID</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="nom">Name:</label>
+        <input type="text" id="nom" name="nom" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="prenom">Last name:</label>
+        <input type="text" id="prenom" name="prenom" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="tel">Phone Number:</label>
+        <input type="text" id="tel" name="tel" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="ville">City:</label>
+        <input type="text" id="ville" name="ville" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="adresse">Adress:</label>
+        <input type="text" id="adresse" name="adresse" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="salaire">Salary:</label>
+        <input type="text" id="salaire" name="salaire" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="function">Function:</label>
+        <select id="function" name="function" class="form-control" required>
+          <option value="" disabled selected>Select a Function</option>
+          <option value="Pilot">Pilot</option>
+          <option value="Flight Attendant">Flight Attendant</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="datemb">Hire Date:</label>
+        <input type="date" id="datemb" name="datemb" class="form-control date-picker" required />
+      </div>
       <div class="suggestions">
         <ul id="date-suggestions">
         </ul>
-        </div>  
+      </div>  
       <br>
       <br>  
-      <button type="submit">Add Crew Member</button>
+      <button type="submit" class="btn btn-primary">Add Crew Member</button>
     </form>
     {% if context.error %}
         <p style="color:red;">{{ context.error }}</p>
@@ -273,49 +284,70 @@
     {% if context.error2 %}
         <p style="color:red;">{{ context.error2 }}</p>
     {% endif %}
-
     {% elif context.view == "update" %}
     <h2>Edit Crew Member</h2>
     <form method="POST">
-      <label for="flight_id">Flight ID:</label>
-      <select id="flight_id" name="flight_id" value="{{context['crew_member'][0][1]}}" >
-        <option value="" disabled selected>Select Flight ID</option>
-      </select>
-      <label for="new_nom">Name:</label>
-      <input type="text" id="new_nom" name="new_nom" value="{{context['crew_member'][0][2]}}" >
-      <label for="new_prenom">Last name:</label>
-      <input type="text" id="new_prenom" name="new_prenom" value="{{context['crew_member'][0][3]}}">
-      <label for="new_email">Email:</label>
-      <input type="text" id="new_email" name="new_email" value="{{context['crew_member'][0][4]}}" >
-      <label for="new_password">Password:</label>
-      <input type="text" id="new_password" name="new_password" value="{{context['crew_member'][0][5]}}" >
-      <label for="new_tel">Phone Number:</label>
-      <input type="text" id="new_tel" name="new_tel" value="{{context['crew_member'][0][6]}}" >
-      <label for="new_ville">City:</label>
-      <input type="text" id="new_ville" name="new_ville" value="{{context['crew_member'][0][7]}}" >
-      <label for="new_adresse">Adress:</label>
-      <input type="text" id="new_adresse" name="new_adresse" value="{{context['crew_member'][0][8]}}" >
-      <label for="new_salaire">Salary:</label>
-      <input type="text" id="new_salaire" name="new_salaire" value="{{context['crew_member'][0][9]}}" >
-      <label for="new_function">Function:</label>
-      <input type="text" id="new_function" name="new_function" value="{{context['crew_member'][0][10]}}" >
-      <label for="new_datemb">Hire Date:</label>
-      <input type="date" id="new_datemb" name="datemb" class="date-picker" value="{{context['crew_member'][0][11]}}" >
+      <div class="form-group">
+        <label for="flight_id">Flight ID:</label>
+        <select id="flight_id" name="flight_id" class="form-control" value="{{context['crew_member'][0][1]}}" >
+          <option value="" disabled selected>Select Flight ID</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="new_nom">Name:</label>
+        <input type="text" id="new_nom" name="new_nom" class="form-control" value="{{context['crew_member'][0][2]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_prenom">Last name:</label>
+        <input type="text" id="new_prenom" name="new_prenom" class="form-control" value="{{context['crew_member'][0][3]}}">
+      </div>
+      <div class="form-group">
+        <label for="new_email">Email:</label>
+        <input type="text" id="new_email" name="new_email" class="form-control" value="{{context['crew_member'][0][4]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_password">Password:</label>
+        <input type="text" id="new_password" name="new_password" class="form-control" value="{{context['crew_member'][0][5]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_tel">Phone Number:</label>
+        <input type="text" id="new_tel" name="new_tel" class="form-control" value="{{context['crew_member'][0][6]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_ville">City:</label>
+        <input type="text" id="new_ville" name="new_ville" class="form-control" value="{{context['crew_member'][0][7]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_adresse">Adress:</label>
+        <input type="text" id="new_adresse" name="new_adresse" class="form-control" value="{{context['crew_member'][0][8]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_salaire">Salary:</label>
+        <input type="text" id="new_salaire" name="new_salaire" class="form-control" value="{{context['crew_member'][0][9]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_function">Function:</label>
+        <input type="text" id="new_function" name="new_function" class="form-control" value="{{context['crew_member'][0][10]}}" >
+      </div>
+      <div class="form-group">
+        <label for="new_datemb">Hire Date:</label>
+        <input type="date" id="new_datemb" name="datemb" class="form-control date-picker" value="{{context['crew_member'][0][11]}}" >
+      </div>
       <div class="suggestions">
         <ul id="date-suggestions">
         </ul>
-        </div>  
+      </div>  
       <br>
       <br>  
 
-      <button type="submit">Update</button>
+      <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
     {% elif context.view == "details" %}
     <h2>Crew Member Details</h2>
     {% if context.crew_member%}
-    <div class="details-card">
-      <table>
+    <div class="card details-card">
+      <table class="table">
         <tr><th>ID</th><td>{{context["crew_member"][0][0]}}</td></tr>
         <tr><th>Flight ID</th><td>{{context["crew_member"][0][1]}}</td></tr>
         <tr><th>Name</th><td>{{context["crew_member"][0][2]}}</td></tr>
@@ -328,14 +360,15 @@
         <tr><th>NBTHV</th><td>{{context["crew_member"][0][9]}}</td></tr>
       </table>
       <div class="action-links">
-        <a href="{{ url_for('crew_routes.crew', action='update', id=context['crew_member'][0][0]) }}">Edit</a>
+        <a href="{{ url_for('crew_routes.crew', action='update', id=context['crew_member'][0][0]) }}" class="btn btn-primary">Edit</a>
         <form method="POST" action="{{ url_for('crew_routes.crew', action='delete', id=context['crew_member'][0][0]) }}" style="display:inline;">
-          <button class="delete" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
+          <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this crew member?')">Delete</button>
         </form>
       </div>
     </div>
     {%endif%}
   {% endif %}
+  </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
         fetchDropdownData("flight", "flight_id");
@@ -359,6 +392,6 @@
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-</script>
+  </script>
   </body>
 </html>
