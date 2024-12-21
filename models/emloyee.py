@@ -74,11 +74,14 @@ class Employee:
         conn.close()
         return employees if employees else []
 
+
+
+
     @staticmethod
     def get_db_connection():
         conn=sqlite3.connect("airplain.db")
         conn.row_factory=sqlite3.Row
-        return conn
+        return conn    
 
     @staticmethod
     def get_all():
@@ -90,7 +93,7 @@ class Employee:
         if rows:
             return rows
         return None
-
+    
     @staticmethod
     def get_by_id(employee_id):
         conn=Employee.get_db_connection()
@@ -225,7 +228,7 @@ class Employee:
         cursor.execute("UPDATE employees SET email = ? WHERE NUMEMP = ?", (email, employee_id))
         conn.commit()
         conn.close()
-
+        
     def set_password_hash(self, employee_id, password_hash):
         conn=Employee.get_db_connection()
         cursor=conn.cursor()
@@ -296,7 +299,7 @@ class FL_Employee(Employee):
         if row:
             return row
         return None
-
+    
     def set_NBMHV(self, employee_id, NBMHV):#set to O as default !!!!!
         conn=Employee.get_db_connection()
         cursor=conn.cursor()
@@ -320,4 +323,3 @@ class FL_Employee(Employee):
             self.set_NBTHV(employee_id, 0)
         else:
             raise ValueError(f"Employee with email {email} not found.")
-

@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import current_user, login_required
-from AIRPORT_PROJECT.models.revision import Revision
-from AIRPORT_PROJECT.models.aircraft import Aircraft
-from AIRPORT_PROJECT.models.emloyee import Employee
+from models.revision import Revision
+from models.aircraft import Aircraft
+from models.emloyee import Employee
 from datetime import datetime
 
 maintanance_routes = Blueprint('maintanance_routes', __name__)
@@ -11,7 +10,6 @@ maintanance_routes = Blueprint('maintanance_routes', __name__)
 
 def maintenance():
     context = {}
-    context["current_user"] = current_user
     action = request.args.get("action", "list")
     aircraft_id = request.args.get("id", type=int)
     tech_name = request.form.get("tech_name")
@@ -78,6 +76,5 @@ def maintenance():
         flash(f"An error occurred: {str(e)}", "error")
         return redirect(url_for('maintanance_routes.maintenance'))
 
-    # Common data for all views
     context["statuses"] = ["Available", "OutOfService", "ReqMaintenance"]
     return render_template('maintanance.html', **context)

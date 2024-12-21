@@ -1,10 +1,10 @@
 import sqlite3
 
 class Escale:
-    def __init__(self,IDESC,APORTESC,HARRESC,DURESC,NOORD,NUMVOL):
+    def __init__(self,IDESC,APORTESC,HARMESC,DURESC,NOORD,NUMVOL):
         self.IDESC=IDESC
         self.APORTESC=APORTESC
-        self.HARRESC=HARRESC
+        self.HARMESC=HARMESC
         self.DURESC=DURESC
         self.NOORD=NOORD
         self.NUMVOL=NUMVOL
@@ -16,10 +16,10 @@ class Escale:
         return conn
     
     @staticmethod
-    def get_all_escale(idesc):
+    def get_all_escale():
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM escale WHERE IDESC=?",(idesc,))
+        cursor.execute("SELECT * FROM escale ")
         row = cursor.fetchall()
         conn.close()
         if row:
@@ -31,7 +31,7 @@ class Escale:
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("SELECT * FROM escale WHERE NUMVOL=?",(numvol,))
-        row = cursor.fetchone()
+        row = cursor.fetchall()
         conn.close()
         if row:
             return row
@@ -41,11 +41,11 @@ class Escale:
     def get_heure_arrive(idesc):
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT HARRESC FROM escale WHERE IDESC = ?",(idesc,))
+        cursor.execute("SELECT HARMESC FROM escale WHERE IDESC = ?",(idesc,))
         row=cursor.fetchone()
         conn.close()
         if row:
-            return row["HARRESC"]
+            return row["HARMESC"]
         return None
     
     @staticmethod
@@ -55,11 +55,9 @@ class Escale:
         cursor.execute("SELECT * FROM escale WHERE APORTESC = ?",(APORTESC,))
         row = cursor.fetchall()
         conn.close()
-        if row:
-            return row
-        return None
+        return row
     
-    def create_escale(airport_code, arrival_time, stop_duration, flight_number, stop_order):
+    def create_escale(airport_code, arrival_time, stop_duration, stop_order,flight_number):
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
         cursor.execute("""
@@ -75,3 +73,81 @@ class Escale:
         cursor.execute("DELETE FROM escale WHERE IDESC = ?", (idesc,))
         conn.commit()
         conn.close()
+
+    @staticmethod
+    def get_escale_by_id(idesc):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT * FROM escale WHERE IDESC =?",(idesc,))
+        row=cursor.fetchall()
+        if row:
+            return row
+        return None
+    
+    def update_escale(idesc,aportesc,harresc,duresc,noord):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        if aportesc:
+            cursor.execute("UPDATE escale SET APORTESC = ? WHERE IDESC = ?", (aportesc,idesc))
+        if harresc:
+            cursor.execute("UPDATE escale SET HARMESC = ? WHERE IDESC = ?", (harresc,idesc))
+        if duresc:
+            cursor.execute("UPDATE escale SET DURESC = ? WHERE IDESC = ?", (duresc,idesc))
+        if noord:
+            cursor.execute("UPDATE escale SET NOORD = ? WHERE IDESC = ?", (noord, idesc))
+
+        conn.commit()
+        conn.close()   
+         
+    def check_airport_exists(codev):
+       conn=Escale.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM airport WHERE CODEV = ?", (codev,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None    
+    
+    def check_flight_exists(numvol):
+       conn=Escale.get_db_connection()
+       cursor=conn.cursor()
+
+       cursor.execute("SELECT 1 FROM flight WHERE id = ?", (numvol,))
+       result = cursor.fetchone()
+       conn.close()
+
+       return result is not None
+    
+    @staticmethod
+    def get_all_airport_code():
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT NOM FROM airport")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None
+    
+    @staticmethod
+    def get_all_flights():
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT id FROM flight")
+        rows=cursor.fetchall()
+        conn.close()
+        if rows:
+            return rows
+        return None
+    
+    @staticmethod
+    def get_airport_code_by_name(name):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT CODEV FROM airport WHERE NOM = ?",(name,))
+        row=cursor.fetchone()
+        conn.close()
+        if row:
+            return row[0]
+        return None

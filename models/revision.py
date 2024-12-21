@@ -1,5 +1,5 @@
 import sqlite3
-from AIRPORT_PROJECT.models.aircraft import Aircraft
+from models.aircraft import Aircraft
 class Revision:
     def __init__(self, NUMREV, RAPPORT, DATEREV, NBHREV, avion, tec):
         self.NUMREV = NUMREV

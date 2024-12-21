@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Airportt Management</title>
+    <title>Airport Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -113,6 +113,7 @@
             max-width: 800px;
             margin: 0 auto;
         }
+
     </style>
 </head>
 <body>
@@ -120,7 +121,7 @@
     <nav>
         <a href="{{ url_for('airport_routes.airport', action='list') }}">List Airports</a>
         <a href="{{ url_for('airport_routes.airport', action='search') }}">Search Airport</a>
-        <a href="{{ url_for('airport_routes.airport', action='create') }}">Create Airport</a>
+        <a href="{{ url_for('airport_routes.airport', action='create') }}">Add Airport</a>
     </nav>
 
     {% if context.view == "list" %}
@@ -188,7 +189,7 @@
         {% endif %}
 
     {% elif context.view == "create" %}
-        <h2>Create New Airport</h2>
+        <h2>Add New Airport</h2>
         <form method="POST">
             <label for="codev">Airport Code:</label>
             <input type="text" id="codev" name="codev" required>
@@ -209,11 +210,11 @@
         {% if context.airport %}
             <form method="POST">
                 <label for="nom">Airport Name:</label>
-                <input type="text" id="nom" name="nom" value="{{ context.airport.NOM }}" required>
+                <input type="text" id="nom" name="nom" value="{{ context.airport.NOM }}" >
                 <label for="pays">Country:</label>
-                <input type="text" id="pays" name="pays" value="{{ context.airport.Pays }}" required>
+                <input type="text" id="pays" name="pays" value="{{ context.airport.Pays }}" >
                 <label for="ville">City:</label>
-                <input type="text" id="ville" name="ville" value="{{ context.airport.VILLE }}" required>
+                <input type="text" id="ville" name="ville" value="{{ context.airport.VILLE }}" >
                 <button type="submit">Update Airport</button>
             </form>
         {% else %}
@@ -223,8 +224,14 @@
     {% elif context.view == "search" %}
         <h2>Search Airport</h2>
         <form method="POST">
-            <label for="name">Airport Name:</label>
+            <label for="name">Search by Airport Name:</label>
             <input type="text" id="name" name="name" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <form method="POST">
+            <label for="city">Search by City:</label>
+            <input type="text" id="city" name="city" required>
             <button type="submit">Search</button>
         </form>
         {% if context.airports %}

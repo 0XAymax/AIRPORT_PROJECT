@@ -154,6 +154,31 @@
             margin-top: 4rem;
             text-align: center;
         }
+        .logout-btn {
+            background-color: #dc3545; /* Red color */
+            margin-left: auto;
+            margin-right: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none; /* Ensure no underline */
+        }
+        
+        .logout-btn:hover {
+            background-color: #c82333; /* Darker red for hover */
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logout-btn:active {
+            transform: scale(1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -161,6 +186,9 @@
         <div class="row mb-4">
             <div class="col">
                 <h1 class="h2">Maintenance Management</h1>
+                {% if session.get('user_id') %}
+                <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">Log Out</a>
+                {% endif %}
             </div>
             <div class="col-auto">
                 <a href="{{ url_for('maintanance_routes.maintenance', action='list') }}"

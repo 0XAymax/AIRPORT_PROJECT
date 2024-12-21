@@ -8,6 +8,7 @@ def airport():
     action = request.args.get("action", "list")
     airport_id = request.args.get("id", type=str)
     name = request.form.get("name", "")
+    city =request.form.get("city","")
     context = {}
 
     if action=="list":
@@ -18,7 +19,10 @@ def airport():
         context["view"]="details"
     elif action == "search":
         if request.method == "POST":
-            context["airports"] =Airport.get_airport_by_name(name)
+            if name:
+              context["airports"] =Airport.get_airport_by_name(name)
+            if city:
+              context["airports"]=Airport.get_airport_by_city(city)  
         context["view"]= "search"
     elif action == "city" and airport_id:
         context["city"]=Airport.get_city(airport_id)  

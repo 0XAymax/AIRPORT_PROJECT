@@ -6,13 +6,14 @@ cursor = con.cursor()
 # Aircraft Table
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS aircraft (
-        NUMAV INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        TYPE VARCHAR(200) NOT NULL,
-        datems DATE NOT NULL,
-        NBHDDREV INTEGER DEFAULT 0,
-        status TEXT NOT NULL CHECK (status IN ('ReqMaintenance', 'Available', 'In Maintenance', 'Out of Service'))
-    )
+    NUMAV INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,
+    TYPE VARCHAR(200) NOT NULL,
+    datems DATE NOT NULL,
+    NBHDDREV INTEGER DEFAULT 0,
+    status TEXT NOT NULL CHECK (status IN ('Available', 'In Maintenance', 'Out of Service'))
+)
 """)
+
 # Employees Table
 cursor.execute("""
   CREATE TABLE IF NOT EXISTS employees (
@@ -25,7 +26,7 @@ cursor.execute("""
     ville TEXT NOT NULL,
     adresse TEXT NOT NULL,
     salaire FLOAT NOT NULL,
-    FONCTION TEXT NOT NULL CHECK (FONCTION IN ('Admin','Pilot', 'Flight Attendant', 'Technician', 'Human Ressources Manager', 'Flight Manager')),
+    FONCTION TEXT NOT NULL,
     datemb DATE NOT NULL,
     NBMHV INTEGER DEFAULT NULL,
     NBTHV INTEGER DEFAULT NULL
@@ -72,12 +73,13 @@ cursor.execute("""
 
 # Vol Table
 cursor.execute("""
-    CREATE TABLE IF NOT EXISTS vol (
-    NUMVOL INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    CREATE TABLE IF NOT EXISTS flight (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,           
+    NUMVOL INTEGER NOT NULL,
     APORTDEP VARCHAR(255) NOT NULL,
     APORTARR VARCHAR(255) NOT NULL,
     HDEP TIME NOT NULL,
-    durvol INTEGER NOT NULL,
+    durvol TIME NOT NULL,
     jvol TEXT NOT NULL CHECK (jvol IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')),
     FOREIGN KEY(APORTDEP) REFERENCES airport(CODEV) ON DELETE CASCADE,
     FOREIGN KEY(APORTARR) REFERENCES airport(CODEV) ON DELETE CASCADE,
@@ -90,9 +92,9 @@ cursor.execute("""
     CREATE TABLE IF NOT EXISTS employee_vol (
     NUMEMP INTEGER NOT NULL,
     NUMVOL INTEGER NOT NULL,
-    PRIMARY KEY (NUMEMP, NUMVOL),
+    PRIMARY KEY (NUMEMP),
     FOREIGN KEY (NUMEMP) REFERENCES employees(NUMEMP) ON DELETE CASCADE,
-    FOREIGN KEY (NUMVOL) REFERENCES vol(NUMVOL) ON DELETE CASCADE
+    FOREIGN KEY (NUMVOL) REFERENCES flight(id) ON DELETE CASCADE
 )
 """)
 
