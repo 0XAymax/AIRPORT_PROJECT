@@ -140,7 +140,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Aircraft ID</th>
+                    <th>Flight ID</th>
+                    <th>Aircraft </th>
                     <th>Departure</th>
                     <th>Destination</th>
                     <th>Action</th>
@@ -152,6 +153,7 @@
                         <td>{{ flight[0] }}</td>
                         <td>{{ flight[1] }}</td>
                         <td>{{ flight[2] }}</td>
+                        <td>{{ flight[3] }}</td>
                         <td>
                             <a href="{{ url_for('flight_routes.flight', action='details', id=flight[0]) }}">View Details</a>
                             <a href="{{ url_for('flight_routes.flight', action='update', id=flight[0]) }}">Update</a>
@@ -171,27 +173,27 @@
                 <table>
                     <tr>
                         <th>Aircraft ID</th>
-                        <td>{{ context["flight"][0][0] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Departure</th>
                         <td>{{ context["flight"][0][1] }}</td>
                     </tr>
                     <tr>
-                        <th>Destination</th>
+                        <th>Departure</th>
                         <td>{{ context["flight"][0][2] }}</td>
                     </tr>
                     <tr>
-                        <th>Departure time</th>
+                        <th>Destination</th>
                         <td>{{ context["flight"][0][3] }}</td>
                     </tr>
                     <tr>
-                        <th>Duration</th>
+                        <th>Departure time</th>
                         <td>{{ context["flight"][0][4] }}</td>
                     </tr>
                     <tr>
-                        <th>Day</th>
+                        <th>Duration</th>
                         <td>{{ context["flight"][0][5] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Day</th>
+                        <td>{{ context["flight"][0][6] }}</td>
                     </tr>
                 </table>
                 <div class="action-links">
@@ -208,17 +210,17 @@
     {% elif context.view == "create" %}
         <h2>Create New Flight</h2>
         <form method="POST">
-            <label for="numav">Aircraft ID:</label>
+            <label for="numav">Aircraft :</label>
             <select id="numav" name="numav" required>
-                <option value="" disabled selected>Select Aircraft ID</option>
+                <option value="" disabled selected>Select Aircraft </option>
                 <!-- Aircraft options will be populated by JavaScript -->
             </select>
-            <label for="departure">Departure Code:</label>
+            <label for="departure">Departure Airport:</label>
             <select id="departure" name="departure" required>
                 <option value="" disabled selected>Select Departure Airport</option>
                 <!-- Departure options will be populated by JavaScript -->
             </select>
-            <label for="destination">Destination Code:</label>
+            <label for="destination">Destination Airport:</label>
             <select id="destination" name="destination" required>
                 <option value="" disabled selected>Select Arrival Airport</option>
                 <!-- Arrival options will be populated by JavaScript -->
@@ -256,18 +258,18 @@
         <h2>Update Flight</h2>
         {% if context.flight %}
             <form method="POST">
-                <label for="numav">Aircraft ID:</label>
+                <label for="numav">Aircraft :</label>
                 <select id="numav" name="numav">
-                    <option value="" disabled selected>Select Aircraft ID</option>
+                    <option value="" disabled selected>Select Aircraft </option>
                     {% for aircraft in context.aircrafts %}
                         <option value="{{ aircraft }}" {% if aircraft == context.flight.NUMAV %}selected{% endif %}>
                             {{ aircraft }}
                         </option>
                     {% endfor %}
                 </select>
-                <label for="departure">Departure Code:</label>
+                <label for="departure">Departure:</label>
                 <select id="departure" name="departure">
-                    <option value="" disabled selected>Select Departure Code</option>
+                    <option value="" disabled selected>Select Departure </option>
                     {% for airport in context.airports %}
                         <option value="{{ airport }}" {% if airport == context.flight.APORTDEP %}selected{% endif %}>
                             {{ airport }}
@@ -393,7 +395,7 @@
         function fetchDropdownData(field, selectId) {
             console.log(`Fetching ${field} data for ${selectId}`);
     
-            fetch(`/get_dropdown_data?field=${field}`)
+            fetch(`/get_dropdown_data?field=${field}&timestamp=${Date.now()}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);

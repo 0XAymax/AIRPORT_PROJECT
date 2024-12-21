@@ -21,7 +21,7 @@ class Vol:
         conn=Vol.get_db_connection()
         cursor =conn.cursor()
         cursor.execute("""
-    SELECT v.NUMVOL, dep.NOM, arr.NOM, HDEP, durvol, jvol
+    SELECT v.id,v.NUMVOL, dep.NOM, arr.NOM, HDEP, durvol, jvol
     FROM flight v
     INNER JOIN airport dep ON v.APORTDEP = dep.CODEV
     INNER JOIN airport arr ON v.APORTARR = arr.CODEV
@@ -59,7 +59,10 @@ class Vol:
     def get_all_vol():
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT v.NUMVOL,dep.NOM AS APORTDEP, arr.NOM AS APORTARR FROM flight v INNER JOIN airport dep ON v.APORTDEP = dep.CODEV INNER JOIN  airport arr ON v.APORTARR = arr.CODEV")
+        cursor.execute("""SELECT v.id, a.TYPE, dep.NOM AS APORTDEP, arr.NOM AS APORTARR FROM flight v 
+                        INNER JOIN airport dep ON v.APORTDEP = dep.CODEV
+                        INNER JOIN airport arr ON v.APORTARR = arr.CODEV 
+                        INNER JOIN aircraft a ON v.NUMVOL = a.NUMAV""")
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -115,7 +118,7 @@ class Vol:
     def delete_vol(id):
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM flight WHERE NUMVOL=?",(id,))
+        cursor.execute("DELETE FROM flight WHERE id=?",(id,))
         conn.commit()
         conn.close()
     
@@ -150,10 +153,10 @@ class Vol:
     
     '''THIS IS JUST FOR DESIGN FEATURES '''
     @staticmethod
-    def get_all_airport_code():
+    def get_all_airports_name():
         conn=Vol.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT CODEV FROM airport")
+        cursor.execute("SELECT NOM FROM airport")
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -166,7 +169,7 @@ class Vol:
      cursor=conn.cursor()
      try:
         # Query example for SQLAlchemy
-        results = cursor.execute("SELECT NUMAV FROM aircraft WHERE status ='Available'").fetchall()
+        results = cursor.execute("SELECT TYPE FROM aircraft WHERE status ='Available'").fetchall()
 
         # Convert the results into a simple list
         aircraft_ids = [result[0] for result in results]  # Extract the ID from each tuple
@@ -178,3 +181,25 @@ class Vol:
      except Exception as e:
         print(f"Error fetching aircraft IDs: {e}")
         return []
+    
+    @staticmethod
+    def get_aircraft_by_name(name):
+        conn=Vol.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT NUMAV FROM aircraft WHERE TYPE = ?",(name,))
+        row=cursor.fetchone()
+        conn.close()
+        if row:
+            return row[0]
+        return None
+
+    @staticmethod
+    def get_airport_code_by_name(name):
+        conn=Vol.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT CODEV FROM airport WHERE NOM = ?",(name,))
+        row=cursor.fetchone()
+        conn.close()
+        if row:
+            return row[0]
+        return None

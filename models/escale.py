@@ -123,7 +123,7 @@ class Escale:
     def get_all_airport_code():
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT CODEV FROM airport")
+        cursor.execute("SELECT NOM FROM airport")
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -139,4 +139,15 @@ class Escale:
         conn.close()
         if rows:
             return rows
+        return None
+    
+    @staticmethod
+    def get_airport_code_by_name(name):
+        conn=Escale.get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT CODEV FROM airport WHERE NOM = ?",(name,))
+        row=cursor.fetchone()
+        conn.close()
+        if row:
+            return row[0]
         return None

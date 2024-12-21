@@ -1,9 +1,9 @@
 import sqlite3
 
 
+context={}
 con = sqlite3.connect("airplain.db")
-cursor = con.cursor()
-cursor.execute("SELECT e.NUMEMP, ev.NUMVOL, e.NOM, e.prenom, e.email, e.tel, e.FONCTION, e.datemb, e.NBMHV, e.NBTHV FROM employees e JOIN employee_vol ev ON e.NUMEMP = ev.NUMEMP WHERE e.NUMEMP=16")
+cursor=con.cursor()
+cursor.execute("SELECT v.id, a.TYPE, dep.NOM AS APORTDEP, arr.NOM AS APORTARR FROM flight v INNER JOIN airport dep ON v.APORTDEP = dep.CODEV INNER JOIN airport arr ON v.APORTARR = arr.CODEV INNER JOIN aircraft a ON v.NUMVOL = a.NUMAV")
 rows=cursor.fetchall()
 con.close()
-print(rows)

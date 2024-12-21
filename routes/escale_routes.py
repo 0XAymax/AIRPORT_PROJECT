@@ -39,6 +39,7 @@ def escale():
             if not all([airport_code, arrival_time, stop_duration, stop_order, flight_number]):
                 context["error"] = "All fields are required to create an escale!"
                 return render_template("escale.html", context=context)
+            airport_code=Escale.get_airport_code_by_name(airport_code)
             Escale.create_escale(airport_code, arrival_time, stop_duration, stop_order, flight_number)
             return redirect(url_for('escale_routes.escale', action='list'))
 

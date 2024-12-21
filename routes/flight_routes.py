@@ -51,6 +51,9 @@ def flight():
             if not all([departure_airport, arrival_airport, departure_time, flight_duration, day_of_week]):
                 context["error"] = "All fields except are required!"
                 return render_template("flight.html", context=context)
+            numv=Vol.get_aircraft_by_name(numv)
+            departure_airport=Vol.get_airport_code_by_name(departure_airport)
+            arrival_airport=Vol.get_airport_code_by_name(arrival_airport)
             Vol.create_vol(numv,departure_airport, arrival_airport, departure_time, 
                          flight_duration, day_of_week)
             return redirect(url_for('flight_routes.flight', action='list'))
@@ -65,7 +68,13 @@ def flight():
             hdep = request.form.get("hdep")
             durvol = request.form.get("duration")
             jvol = request.form.get("date")
-
+            
+            if numav:
+                numav=Vol.get_aircraft_by_name(numav)
+            if aportdep:
+                aportdep=Vol.get_airport_code_by_name(aportdep)
+            if aportarr:
+                aportarr=Vol.get_airport_code_by_name(aportarr)        
             Vol.update_vol(flight_id,numav, aportdep, aportarr, hdep, durvol, jvol)
             return redirect(url_for('flight_routes.flight', action='details', id=flight_id))
 
@@ -83,7 +92,7 @@ def get_dropdown_data():
         # Get aircraft dropdown data using the helper function
         dropdown_data = get_aircraft_dropdown_data()
     elif field == "airport":
-        airports = Vol.get_all_airport_code()
+        airports = Vol.get_all_airports_name()
         print(f"Airports fetched from DB: {airports}")  # Debug DB response
         dropdown_data = [airport[0] for airport in airports]
     else:
