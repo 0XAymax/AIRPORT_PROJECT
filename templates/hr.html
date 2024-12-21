@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <style>
+        :root {
+            --airfrance-blue: #002157;
+            --airfrance-red: #EF3340;
+            --light-gray: #f5f5f5;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--light-gray);
+        }
+
+        .header {
+            background: var(--airfrance-blue);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-form, .form-container form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            flex: 1 1 300px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--airfrance-blue);
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: var(--airfrance-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .btn-red {
+            background: var(--airfrance-red);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--airfrance-blue);
+            color: white;
+        }
+
+        tr:hover {
+            background: var(--light-gray);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--airfrance-blue);
+        }
+
+        .details-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .detail-card h3 {
+            color: var(--airfrance-blue);
+            margin-top: 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .alert-success {
+            background: #4CAF50;
+        }
+
+        .alert-error {
+            background: var(--airfrance-red);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 2rem;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Employee Management System</h1>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if view == "list" or view == "search" %}
+            <form class="search-form" method="POST" action="{{ url_for('hr_routes.hr', action='search') }}">
+                <div class="form-group">
+                    <label for="search_name">Name</label>
+                    <input type="text" name="search_name" id="search_name"
+                           value="{{ search_name if search_name else '' }}"
+                           placeholder="Search by name...">
+                </div>
+
+                <div class="form-group">
+                    <label for="search_fonction">Function</label>
+                    <select name="search_fonction" id="search_fonction">
+                        <option value="">Select Function</option>
+                        <option value="Admin" {% if search_fonction == "Admin" %}selected{% endif %}>Admin</option>
+                        <option value="Pilot" {% if search_fonction == "Pilot" %}selected{% endif %}>Pilot</option>
+                        <option value="Flight Attendant" {% if search_fonction == "Flight Attendant" %}selected{% endif %}>Flight Attendant</option>
+                        <option value="Technician" {% if search_fonction == "Technician" %}selected{% endif %}>Technician</option>
+                        <option value="Human Resources Manager" {% if search_fonction == "Human Resources Manager" %}selected{% endif %}>Human Resources Manager</option>
+                        <option value="Flight Manager" {% if search_fonction == "Flight Manager" %}selected{% endif %}>Flight Manager</option>
+                    </select>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn">Search</button>
+                    <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Reset</a>
+                    <a href="{{ url_for('hr_routes.hr', action='create') }}" class="btn">Add New Employee</a>
+                </div>
+            </form>
+
+            {% if employees %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Function</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.NOM }} {{ employee.prenom }}</td>
+                                <td>{{ employee.FONCTION }}</td>
+                                <td>{{ employee.email }}</td>
+                                <td>{{ employee.tel }}</td>
+                                <td class="btn-group">
+                                    <a href="{{ url_for('hr_routes.hr', action='details', id=employee.NUMEMP) }}" class="btn">View</a>
+                                    <a href="{{ url_for('hr_routes.hr', action='update', id=employee.NUMEMP) }}" class="btn">Edit</a>
+                                    <form action="{{ url_for('hr_routes.hr', action='delete', id=employee.NUMEMP) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-red" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-results">
+                    <h2>No employees found matching your search criteria</h2>
+                </div>
+            {% endif %}
+
+        {% elif view == "create" %}
+            <div class="form-container">
+                <h2>Add New Employee</h2>
+                <form method="POST" action="{{ url_for('hr_routes.hr', action='') }}">
+                    <div class="form-group">
+                        <label for="nom">Last Name</label>
+                        <input type="text" name="nom" id="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">First Name</label>
+                        <input type="text" name="prenom" id="prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fonction">Function</label>
+                        <select name="fonction" id="fonction" required>
+                            <option value="">Select Function</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Pilot">Pilot</option>
+                            <option value="Flight Attendant">Flight Attendant</option>
+                            <option value="Technician">Technician</option>
+                            <option value="Human Resources Manager">Human Resources Manager</option>
+                            <option value="Flight Manager">Flight Manager</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Phone</label>
+                        <input type="tel" name="tel" id="tel" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ville">City</label>
+                        <input type="text" name="ville" id="ville" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adresse">Address</label>
+                        <textarea name="adresse" id="adresse" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaire">Salary</label>
+                        <input type="number" name="salaire" id="salaire" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="datemb">Hire Date</label>
+                        <input type="date" name="datemb" id="datemb" required>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Add Employee</button>
+                        <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+        {% elif view == "update" %}
+            <div class="form-container">
+                <h2>Edit Employee</h2>
+                <form method="POST" action="{{ url_for('hr_routes.hr', action='update', id=employee.NUMEMP) }}">
+                    <div class="form-group">
+                        <label for="nom">Last Name</label>
+                        <input type="text" name="nom" id="nom" value="{{ employee.NOM }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">First Name</label>
+                        <input type="text" name="prenom" id="prenom" value="{{ employee.prenom }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fonction">Function</label>
+                        <select name="fonction" id="fonction" required>
+                            <option value="">Select Function</option>
+                            <option value="Admin" {% if employee.FONCTION == "Admin" %}selected{% endif %}>Admin</option>
+                            <option value="Pilot" {% if employee.FONCTION == "Pilot" %}selected{% endif %}>Pilot</option>
+                            <option value="Flight Attendant" {% if employee.FONCTION == "Flight Attendant" %}selected{% endif %}>Flight Attendant</option>
+                            <option value="Technician" {% if employee.FONCTION == "Technician" %}selected{% endif %}>Technician</option>
+                            <option value="Human Resources Manager" {% if employee.FONCTION == "Human Resources Manager" %}selected{% endif %}>Human Resources Manager</option>
+                            <option value="Flight Manager" {% if employee.FONCTION == "Flight Manager" %}selected{% endif %}>Flight Manager</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{ employee.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Phone</label>
+                        <input type="tel" name="tel" id="tel" value="{{ employee.tel }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ville">City</label>
+                        <input type="text" name="ville" id="ville" value="{{ employee.ville }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adresse">Address</label>
+                        <textarea name="adresse" id="adresse" required>{{ employee.adresse }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaire">Salary</label>
+                        <input type="number" name="salaire" id="salaire" value="{{ employee.salaire }}" required>
+                    </div>
+                    {% if employee.FONCTION in ['Pilot', 'Flight Attendant'] %}
+                        <div class="form-group">
+                            <label for="nbmhv">Flight Hours</label>
+                            <input type="number" name="nbmhv" id="nbmhv" value="{{ employee.NBMHV }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nbthv">Total Hours</label>
+                            <input type="number" name="nbthv" id="nbthv" value="{{ employee.NBTHV }}" required>
+                        </div>
+                    {% endif %}
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Update Employee</button>
+                        <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        {% elif view == "details" %}
+            <div class="details-container">
+                <div class="detail-card">
+                    <h3>Personal Information</h3>
+                    <p><strong>Name:</strong> {{ employee.NOM }} {{ employee.prenom }}</p>
+                    <p><strong>Function:</strong> {{ employee.FONCTION }}</p>
+                    <p><strong>Email:</strong> {{ employee.email }}</p>
+                    <p><strong>Phone:</strong> {{ employee.tel }}</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Employment Details</h3>
+                    <p><strong>Employee ID:</strong> {{ employee.NUMEMP }}</p>
+                    <p><strong>Salary:</strong> ${{ employee.salaire }}</p>
+                    <p><strong>Hire Date:</strong> {{ employee.datemb }}</p>
+                    {% if employee.FONCTION in ['Pilot', 'Flight Attendant'] %}
+                        <p><strong>Flight Hours:</strong> {{ employee.NBMHV }}</p>
+                        <p><strong>Total Hours:</strong> {{ employee.NBTHV }}</p>
+                    {% endif %}
+                </div>
+                <div class="detail-card">
+                    <h3>Location Information</h3>
+                    <p><strong>City:</strong> {{ employee.ville }}</p>
+                    <p><strong>Address:</strong> {{ employee.adresse }}</p>
+                </div>
+            </div>
+            <div class="btn-group" style="margin-top: 2rem;">
+                <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn">Back to List</a>
+                <a href="{{ url_for('hr_routes.hr', action='update', id=employee.NUMEMP) }}" class="btn">Edit Employee</a>
+                <form action="{{ url_for('hr_routes.hr', action='delete', id=employee.NUMEMP) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-red" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

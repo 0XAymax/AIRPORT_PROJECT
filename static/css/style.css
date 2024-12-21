@@ -1,0 +1,103 @@
+:root {
+    /* Modern take on traditional colors */
+    --mohican-blue: #1976D2;         /* Brighter, more modern blue */
+    --mohican-orange: #FF7043;       /* Warmer, vibrant orange */
+    --mohican-navy: #1A237E;         /* Deep, rich navy */
+    --mohican-cream: #FFF8E1;        /* Soft, warm cream */
+    --mohican-gray: #455A64;         /* Sophisticated slate gray */
+}
+
+/* Modern typography */
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--mohican-cream);
+    line-height: 1.6;
+}
+
+/* Modern card styling */
+.card {
+    border-radius: 12px;
+    border: none;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Modern navigation */
+.navbar {
+    background-color: var(--mohican-navy);
+    backdrop-filter: blur(10px);
+    border-bottom: none;
+}
+
+.navbar-brand {
+    color: var(--mohican-orange) !important;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Modern buttons */
+.btn-mohican {
+    background-color: var(--mohican-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-mohican:hover {
+    background-color: var(--mohican-navy);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+}
+
+/* Modern tables */
+table {
+    border-radius: 12px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th {
+    background-color: var(--mohican-navy);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+td, th {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Modern form elements */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #E0E0E0;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--mohican-blue);
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+}
+
+/* Footer styling */
+footer {
+    background-color: var(--mohican-navy);
+    color: white;
+    padding: 2rem 0;
+    margin-top: auto;
+}

@@ -82,5 +82,4 @@ class Airport:
             cursor.execute("UPDATE airport SET VILLE =? WHERE CODEV =?",(new_city,codev))
 
         conn.commit()
-        conn.close()    
-
+        conn.close()
