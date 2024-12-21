@@ -179,6 +179,9 @@
             transform: scale(1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .text-right {
+            text-align: right;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -186,10 +189,14 @@
         <div class="row mb-4">
             <div class="col">
                 <h1 class="h2">Maintenance Management</h1>
+            </div>    
+            <div class="col text-right">
                 {% if session.get('user_id') %}
                 <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">Log Out</a>
                 {% endif %}
+            </div> 
             </div>
+          <div class="row mb-4">
             <div class="col-auto">
                 <a href="{{ url_for('maintanance_routes.maintenance', action='list') }}"
                    class="btn btn-outline-primary">View All Aircraft</a>
@@ -197,7 +204,7 @@
                    class="btn btn-outline-secondary">Search Revisions</a>
             </div>
         </div>
-
+    </div>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
