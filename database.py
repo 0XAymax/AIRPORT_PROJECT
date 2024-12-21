@@ -6,14 +6,13 @@ cursor = con.cursor()
 # Aircraft Table
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS aircraft (
-    NUMAV INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,
-    TYPE VARCHAR(200) NOT NULL,
-    datems DATE NOT NULL,
-    NBHDDREV INTEGER DEFAULT 0,
-    status TEXT NOT NULL CHECK (status IN ('Available', 'In Maintenance', 'Out of Service'))
-)
+        NUMAV INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        TYPE VARCHAR(200) NOT NULL,
+        datems DATE NOT NULL,
+        NBHDDREV INTEGER DEFAULT 0,
+        status TEXT NOT NULL CHECK (status IN ('ReqMaintenance', 'Available', 'In Maintenance', 'Out of Service'))
+    )
 """)
-
 # Employees Table
 cursor.execute("""
   CREATE TABLE IF NOT EXISTS employees (
@@ -26,7 +25,7 @@ cursor.execute("""
     ville TEXT NOT NULL,
     adresse TEXT NOT NULL,
     salaire FLOAT NOT NULL,
-    FONCTION TEXT NOT NULL,
+    FONCTION TEXT NOT NULL CHECK (FONCTION IN ('Admin','Pilot', 'Flight Attendant', 'Technician', 'Human Ressources Manager', 'Flight Manager')),
     datemb DATE NOT NULL,
     NBMHV INTEGER DEFAULT NULL,
     NBTHV INTEGER DEFAULT NULL
