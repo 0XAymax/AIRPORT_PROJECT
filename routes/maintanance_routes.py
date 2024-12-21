@@ -76,6 +76,5 @@ def maintenance():
         flash(f"An error occurred: {str(e)}", "error")
         return redirect(url_for('maintanance_routes.maintenance'))
 
-    # Common data for all views
     context["statuses"] = ["Available", "OutOfService", "ReqMaintenance"]
     return render_template('maintanance.html', **context)

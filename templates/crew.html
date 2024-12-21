@@ -252,7 +252,11 @@
       <label for="salaire">Salary:</label>
       <input type="text" id="salaire" name="salaire" required />
       <label for="function">Function:</label>
-      <input type="text" id="function" name="function" required />
+      <select id="function" name="function" required>
+        <option value="" disabled selected>Select a Function</option>
+        <option value="Pilot">Pilot</option>
+        <option value="Flight Attendant">Flight Attendant</option>
+    </select>
       <label for="datemb">Hire Date:</label>
       <input type="date" id="datemb" name="datemb" class="date-picker" required />
       <div class="suggestions">

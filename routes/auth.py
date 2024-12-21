@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for,session
+from flask import Blueprint, render_template, flash, redirect, url_for, session
 from login_form import loginform  
 import sqlite3
 
@@ -28,19 +28,44 @@ def login():
 
         if user:
             session['user_id'] = user['NUMEMP']
-            return redirect(url_for('auth.home')) 
+            session['user_role'] = user['FONCTION']  
+
+            if user['FONCTION'] == 'Admin':
+                return redirect(url_for('auth.home'))
+            elif user['FONCTION'] == 'Flight Manager':
+                return redirect(url_for('auth.flight_manager'))
+            elif user['FONCTION'] == 'Human Ressources Manager':
+                return redirect(url_for('hr_routes.hr'))
+            elif user['FONCTION'] == 'Technician':
+                return redirect(url_for('maintanance_routes.maintenance'))
+            else:
+                flash('Access denied. You do not have the required permissions.', 'danger')
+                return redirect(url_for('auth.login'))
         else:
             flash('Invalid email or password. Please try again.', 'danger')
 
     return render_template('login.html', title='Login', form=form)
 
-# Dashboard route
-@auth_blueprint.route('/home')
+# Home route for admin
+@auth_blueprint.route("/home")
 def home():
-    return render_template("home.html")
+    if 'user_role' in session and session['user_role'] == 'Admin':
+        return render_template('home.html')
+    else:
+        flash('Access denied. Admins only.', 'danger')
+        return redirect(url_for('auth.login'))
 
+# Flight manager route
+@auth_blueprint.route("/flight_manager")
+def flight_manager():
+    if 'user_role' in session and session['user_role'] == 'Flight Manager':
+        return render_template('flight_manager.html')
+    else:
+        flash('Access denied. Flight managers only.', 'danger')
+        return redirect(url_for('auth.login'))
+    
 @auth_blueprint.route('/logout')
 def logout():
     session.pop('user_id', None)  
     flash('You have been logged out.', 'info')
-    return redirect(url_for('auth.login')) 
+    return redirect(url_for('auth.login'))     
