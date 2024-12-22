@@ -38,6 +38,8 @@ def login():
                 return redirect(url_for('hr_routes.hr'))
             elif user['FONCTION'] == 'Technician':
                 return redirect(url_for('maintanance_routes.maintenance'))
+            elif user['FONCTION']=='Pilot' or user['FONCTION']=='Flight Attendant':
+                return redirect(url_for('nav_staff_routes.view_schedule', emp_id=session['user_id']))
             else:
                 flash('Access denied. You do not have the required permissions.', 'danger')
                 return redirect(url_for('auth.login'))
