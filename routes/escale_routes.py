@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request,redirect,url_for
-from models.escale import Escale
+from AIRPORT_PROJECT.models.escale import Escale
 
 escale_routes=Blueprint("escale_routes",__name__)
 

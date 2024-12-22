@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.revision import Revision
-from models.aircraft import Aircraft
-from models.emloyee import Employee
+from AIRPORT_PROJECT.models.revision import Revision
+from AIRPORT_PROJECT.models.aircraft import Aircraft
+from AIRPORT_PROJECT.models.emloyee import Employee
 from datetime import datetime
 
 maintanance_routes = Blueprint('maintanance_routes', __name__)

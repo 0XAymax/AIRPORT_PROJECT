@@ -281,6 +281,27 @@ class Employee:
         conn.close()
 
 class FL_Employee(Employee):
+    @staticmethod
+    def get_employee_schedule(emp_id):
+        conn=Employee.get_db_connection()
+        cursor=conn.cursor()
+        query = """
+    SELECT 
+        f.NUMVOL,
+        f.jvol,           -- This is the day number (1-7)
+        f.HDEP,
+        f.durvol,
+        dep.NOM as departure_airport,
+        arr.NOM as arrival_airport
+    FROM flight f
+    JOIN employee_vol ev ON ev.NUMVOL = f.id
+    JOIN airport dep ON f.APORTDEP = dep.CODEV
+    JOIN airport arr ON f.APORTARR = arr.CODEV
+    WHERE ev.NUMEMP = ?
+    ORDER BY f.jvol, f.HDEP
+    """
+        cursor.execute(query, (emp_id,))
+        return cursor.fetchall()
     def get_NBMHV(self,id):
         conn=Employee.get_db_connection()
         cursor=conn.cursor()
@@ -323,3 +344,27 @@ class FL_Employee(Employee):
             self.set_NBTHV(employee_id, 0)
         else:
             raise ValueError(f"Employee with email {email} not found.")
+# test_schedule.py
+
+
+def test_flight_schedule():
+    # Test with a known employee ID
+    emp_id = 1  # replace with a valid employee ID from your database
+
+    print("Testing flight schedule retrieval...")
+    schedule = FL_Employee.get_employee_schedule(emp_id)
+
+    if schedule:
+        print(f"\nFound {len(schedule)} flights for employee {emp_id}")
+        for flight in schedule:
+            print("\nFlight details:")
+            for key in flight.keys():
+                print(f"{key}: {flight[key]}")
+    else:
+        print(f"No flights found for employee {emp_id}")
+
+    return schedule
+
+# Run the test
+if __name__ == "__main__":
+    test_flight_schedule()

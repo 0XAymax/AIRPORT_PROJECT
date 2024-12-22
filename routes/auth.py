@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, session
-from login_form import loginform  
+from AIRPORT_PROJECT.login_form import loginform
 import sqlite3
 
 # Define a blueprint for authentication routes
@@ -25,7 +25,6 @@ def login():
         cursor.execute("SELECT * FROM employees WHERE email = ? AND password = ?", (email, password))
         user = cursor.fetchone()
         conn.close()
-
         if user:
             session['user_id'] = user['NUMEMP']
             session['user_role'] = user['FONCTION']  
@@ -38,6 +37,8 @@ def login():
                 return redirect(url_for('hr_routes.hr'))
             elif user['FONCTION'] == 'Technician':
                 return redirect(url_for('maintanance_routes.maintenance'))
+            elif user['FONCTION']=='Pilot' or user['FONCTION']=='Flight Attendant':
+                return redirect(url_for('nav_staff_routes.view_schedule', emp_id=session['user_id']))
             else:
                 flash('Access denied. You do not have the required permissions.', 'danger')
                 return redirect(url_for('auth.login'))

@@ -34,7 +34,8 @@ class Crew():
     def get_crew_by_id(crew_id):
         conn=Crew.get_db_connection()
         db=conn.cursor()
-        db.execute("""SELECT e.NUMEMP, ev.NUMVOL, e.NOM, e.prenom, e.email, e.tel, e.FONCTION, e.datemb, e.NBMHV, e.NBTHV FROM employees e JOIN employee_vol ev ON e.NUMEMP = ev.NUMEMP WHERE e.NUMEMP=?""",(crew_id,))
+        db.execute("""SELECT e.NUMEMP, ev.NUMVOL, e.NOM, e.prenom, e.email, e.tel, e.FONCTION, e.datemb, e.NBMHV, e.NBTHV FROM employees e 
+        JOIN employee_vol ev ON e.NUMEMP = ev.NUMEMP WHERE e.NUMEMP=?""",(crew_id,))
         rows = db.fetchall()
         conn.close()
         if rows:
@@ -129,4 +130,3 @@ class Crew():
         if rows:
             return rows
         return None
-    

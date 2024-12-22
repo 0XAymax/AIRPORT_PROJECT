@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models.emloyee  import Employee
+from  AIRPORT_PROJECT.models.emloyee  import Employee
 
 # Create a blueprint
 hr_routes = Blueprint('hr_routes', __name__)
@@ -87,7 +87,7 @@ def hr():
             return redirect(url_for('hr_routes.hr', action='details', id=employee_id))
 
     elif action == "delete" and employee_id and request.method == "POST":
-        Employee.delete(employee_id)  # Delete employee
+        Employee.delete_employee(employee_id)  # Delete employee
         return redirect(url_for('hr_routes.hr', action='list'))
     print(context)  # Debugging the context
     return render_template('hr.html', **context)  # Render the template with context

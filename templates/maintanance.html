@@ -6,180 +6,28 @@
     <title>Maintenance Management</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --airfrance-blue: #002157;
-            --airfrance-red: #EF3340;
-            --light-gray: #f5f5f5;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition-speed: 0.3s;
-        }
+    .logout-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--light-gray);
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-        }
+@media (max-width: 768px) {
+    .flight-info {
+        grid-template-columns: 1fr;
+    }
 
-        body.dark-mode {
-            background: #1a1a1a;
-            color: white;
-        }
+    .schedule-navigation {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
 
-        .header {
-            background: var(--airfrance-blue);
-            color: white;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin: 3rem 0;
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .dark-mode .welcome-section {
-            background: #2d2d2d;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            overflow: hidden;
-        }
-
-        .dark-mode .card {
-            background: #2d2d2d;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-icon {
-            background: var(--airfrance-blue);
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .card-icon svg {
-            width: 48px;
-            height: 48px;
-            fill: white;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .card-title {
-            color: var(--airfrance-blue);
-            margin: 0 0 1rem 0;
-            font-size: 1.25rem;
-        }
-
-        .dark-mode .card-title {
-            color: #fff;
-        }
-
-        .card-text {
-            color: #666;
-            margin: 0 0 1.5rem 0;
-            line-height: 1.5;
-        }
-
-        .dark-mode .card-text {
-            color: #ccc;
-        }
-
-        .btn {
-            background: var(--airfrance-blue);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color var(--transition-speed);
-        }
-
-        .btn:hover {
-            background: #003380;
-        }
-
-        .toggle-btn {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .footer {
-            background: var(--airfrance-blue);
-            color: white;
-            padding: 2rem;
-            margin-top: 4rem;
-            text-align: center;
-        }
-        .logout-btn {
-            background-color: #dc3545; /* Red color */
-            margin-left: auto;
-            margin-right: 20px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-decoration: none; /* Ensure no underline */
-        }
-        
-        .logout-btn:hover {
-            background-color: #c82333; /* Darker red for hover */
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .logout-btn:active {
-            transform: scale(1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    .schedule-grid th,
+    .schedule-grid td {
+        padding: 0.75rem;
+    }
+}
 </head>
 <body class="bg-light">
     <div class="container py-4">

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request,redirect,url_for
-from models.aircraft import Aircraft
+from AIRPORT_PROJECT.models.aircraft import Aircraft
 
 aircraft_routes = Blueprint('aircraft_routes', __name__)
 
