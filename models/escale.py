@@ -19,7 +19,8 @@ class Escale:
     def get_all_escale():
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM escale ")
+        cursor.execute("""SELECT e.IDESC AS IDESC,a.NOM AS APORTESC,e.HARMESC AS HARMESC,e.DURESC AS DURESC ,e.NOORD AS NOORD,
+                       e.NUMVOL AS NUMVOL FROM escale e,airport a WHERE e.APORTESC=a.CODEV """)
         row = cursor.fetchall()
         conn.close()
         if row:
