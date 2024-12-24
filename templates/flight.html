@@ -253,7 +253,7 @@
                     <div class="card-body">
                         <table class="table">
                             <tr>
-                                <th>Aircraft ID</th>
+                                <th>Aircraft </th>
                                 <td>{{ context["flight"][0][1] }}</td>
                             </tr>
                             <tr>
@@ -419,7 +419,7 @@
                 <h3>Search by Day</h3>
                 <div class="form-group">
                     <label for="day">Day:</label>
-                    <input type="text" id="day" name="day" class="form-control" placeholder="Monday/Tuesday/...." pattern="^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$">
+                    <input type="text" id="day" name="day" class="form-control" placeholder="Monday/Tuesday/...." >
                 </div>
                 <button type="submit" name="search_type" value="day" class="btn btn-primary">Search by Day</button>
             </form>
@@ -428,7 +428,7 @@
                 <h3>Search by Departure Airport</h3>
                 <div class="form-group">
                     <label for="depart">Departure Airport:</label>
-                    <input type="text" id="depart" name="depart" class="form-control" placeholder="e.g:JFX" pattern="^[A-Z]{3}$">
+                    <input type="text" id="depart" name="depart" class="form-control" placeholder="Name of the airport" >
                 </div>
                 <button type="submit" name="search_type" value="depart" class="btn btn-primary">Search by Departure</button>
             </form>
@@ -450,7 +450,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Flight Number</th>
+                                <th>Aircraft Number</th>
                                 <th>Departure</th>
                                 <th>Destination</th>
                                 <th>Action</th>

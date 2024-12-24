@@ -76,7 +76,7 @@ class Crew():
         if new_function:
             db.execute("UPDATE employees SET FONCTION= ? WHERE NUMEMP=?", (new_function,crew_id))
         if new_datemb:
-            db.execute("UPDATE employees SET datemb= ? WHERE NUMEMP=?", (new_datemb,crew_id))                        
+            db.execute("UPDATE employees SET datemb= ? WHERE NUMEMP=?", (new_datemb,crew_id))                           
         conn.commit()
         conn.close()
 

@@ -108,7 +108,28 @@
             padding: 2rem;
             color: var(--airfrance-blue);
         }
+        .navbar {
+            background: var(--airfrance-blue);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
 
+        .navbar a {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all var(--transition-speed);
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            color: white;
+        }
         .details-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -163,7 +184,6 @@
         .logout-btn {
             background-color: #dc3545; /* Red color */
             margin-left: auto;
-            margin-right: 20px;
             padding: 10px 20px;
             border: none;
             border-radius: 8px;
@@ -185,17 +205,26 @@
             transform: scale(1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Employee Management System</h1>
-        {% if session.get('user_id') %}
-            <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">Log Out</a>
-        {% endif %}
-    </div>
-
     <div class="container">
+        <h1>Employee Management</h1>
+        <nav class="navbar">
+            <a href="{{ url_for('hr_routes.hr', action='list') }}">List Employees</a>
+            <a href="{{ url_for('hr_routes.hr', action='create') }}">Add Employee</a>
+            <a href="{{ url_for('hr_routes.hr', action='search') }}">Search</a>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">Log Out</a>
+            {% endif %}
+        </nav>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -225,12 +254,7 @@
                         <option value="Flight Manager" {% if search_fonction == "Flight Manager" %}selected{% endif %}>Flight Manager</option>
                     </select>
                 </div>
-
-                <div class="btn-group">
                     <button type="submit" class="btn">Search</button>
-                    <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Reset</a>
-                    <a href="{{ url_for('hr_routes.hr', action='create') }}" class="btn">Add New Employee</a>
-                </div>
             </form>
 
             {% if employees %}
@@ -271,7 +295,7 @@
         {% elif view == "create" %}
             <div class="form-container">
                 <h2>Add New Employee</h2>
-                <form method="POST" action="{{ url_for('hr_routes.hr', action='') }}">
+                <form method="POST" >
                     <div class="form-group">
                         <label for="nom">Last Name</label>
                         <input type="text" name="nom" id="nom" required>
@@ -320,10 +344,7 @@
                         <label for="datemb">Hire Date</label>
                         <input type="date" name="datemb" id="datemb" required>
                     </div>
-                    <div class="btn-group">
                         <button type="submit" class="btn">Add Employee</button>
-                        <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Cancel</a>
-                    </div>
                 </form>
             </div>
 
@@ -381,10 +402,7 @@
                             <input type="number" name="nbthv" id="nbthv" value="{{ employee.NBTHV }}" required>
                         </div>
                     {% endif %}
-                    <div class="btn-group">
                         <button type="submit" class="btn">Update Employee</button>
-                        <a href="{{ url_for('hr_routes.hr', action='list') }}" class="btn btn-red">Cancel</a>
-                    </div>
                 </form>
             </div>
         {% elif view == "details" %}

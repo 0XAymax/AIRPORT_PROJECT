@@ -53,7 +53,10 @@ class Escale:
     def get_escale_by_airport(APORTESC):
         conn=Escale.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM escale WHERE APORTESC = ?",(APORTESC,))
+        query = """
+  SELECT e.IDESC AS IDESC,a.NOM AS APORTESC,e.HARMESC AS HARMESC,e.DURESC AS DURESC ,e.NOORD AS NOORD FROM escale e,airport a WHERE e.APORTESC=a.CODEV AND a.NOM LIKE ?
+    """
+        cursor.execute(query,('%'+APORTESC+'%',))
         row = cursor.fetchall()
         conn.close()
         return row

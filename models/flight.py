@@ -21,8 +21,9 @@ class Vol:
         conn=Vol.get_db_connection()
         cursor =conn.cursor()
         cursor.execute("""
-    SELECT v.id,v.NUMVOL, dep.NOM, arr.NOM, HDEP, durvol, jvol
+    SELECT v.id,ar.TYPE, dep.NOM, arr.NOM, HDEP, durvol, jvol
     FROM flight v
+    INNER JOIN aircraft ar ON v.NUMVOL = ar.NUMAV
     INNER JOIN airport dep ON v.APORTDEP = dep.CODEV
     INNER JOIN airport arr ON v.APORTARR = arr.CODEV
     WHERE id = ?;
@@ -73,7 +74,14 @@ class Vol:
     def get_all_vol_by_depart(depart):
         conn=Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT NUMVOL,APORTDEP,APORTARR,HDEP,durvol,jvol FROM flight WHERE APORTDEP =? ",(depart,))
+        query = """
+        SELECT f.NUMVOL AS NUMVOL, dep.NOM AS APORTDEP, arr.NOM AS APORTARR
+        FROM flight f
+        JOIN airport dep ON f.APORTDEP = dep.CODEV
+        JOIN airport arr ON f.APORTARR = arr.CODEV
+        WHERE dep.NOM LIKE ?
+        """
+        cursor.execute(query,('%'+depart+'%',))
         rows=cursor.fetchall()
         conn.close()
         if rows:
@@ -93,7 +101,8 @@ class Vol:
     def get_vol_by_day(day):
         conn = Vol.get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM flight WHERE jvol = ?", (day,))
+        query = "SELECT * FROM flight WHERE jvol LIKE ?"
+        cursor.execute(query, ('%' + day + '%',))
         rows = cursor.fetchall()
         conn.close()
         if rows:
@@ -144,7 +153,8 @@ class Vol:
     def get_vol_by_hdep(hdep):
         conn=Vol.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM flight WHERE HDEP = ?",(hdep,))
+        query="SELECT * FROM flight WHERE HDEP LIKE ?"
+        cursor.execute(query,('%'+hdep+'%',))
         rows=cursor.fetchall()
         conn.close()
         if rows:

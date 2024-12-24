@@ -74,9 +74,6 @@ class Employee:
         conn.close()
         return employees if employees else []
 
-
-
-
     @staticmethod
     def get_db_connection():
         conn=sqlite3.connect("airplain.db")
@@ -105,181 +102,44 @@ class Employee:
             return row
         return None
 
-    def get_by_full_name(self, last_name, first_name):
+    def create_employee(email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
         conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT * FROM employees WHERE NOM = ? AND prenom = ?", (last_name, first_name))
-        rows=cursor.fetchall()
-        conn.close()
-        if rows:
-            return rows
-        return None
-
-    def get_by_email(self, email):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT * FROM employees WHERE email = ?", (email,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_by_city(self, city):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT * FROM employees WHERE ville = ?", (city,))
-        rows=cursor.fetchall()
-        conn.close()
-        if rows:
-            return rows
-        return None
-
-    def get_by_function(self, function):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT * FROM employees WHERE FONCTION = ?", (function,))
-        rows=cursor.fetchall()
-        conn.close()
-        if rows:
-            return rows
-        return None
-
-    def get_by_salary_range(self, min_salary, max_salary):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT * FROM employees WHERE salaire BETWEEN ? AND ?", (min_salary, max_salary))
-        rows=cursor.fetchall()
-        conn.close()
-        if rows:
-            return rows
-        return None
-
-    def get_full_name_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT NOM, prenom FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_email_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT email FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_password_hash_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT password FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_phone_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT tel FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_address_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT adresse FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def get_salary_by_id(self, employee_id):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("SELECT salaire FROM employees WHERE NUMEMP = ?", (employee_id,))
-        row=cursor.fetchone()
-        conn.close()
-        if row:
-            return row
-        return None
-
-    def set_full_name(self, employee_id, last_name, first_name):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET NOM = ?, prenom = ? WHERE NUMEMP = ?", (last_name, first_name, employee_id))
+        db=conn.cursor()
+        db.execute("""
+        INSERT INTO employees (NOM, prenom, email, password, tel, ville, adresse, salaire, FONCTION, datemb)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """, (nom, prenom, email,password_hash, tel, ville, adresse, salaire, fonction, datemb))
         conn.commit()
         conn.close()
 
-    def set_email(self, employee_id, email):
+    def update_employee(crew_id,new_name,new_prenom,new_email,new_tel,new_ville,new_address,new_salaire,new_function):
         conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET email = ? WHERE NUMEMP = ?", (email, employee_id))
+        db=conn.cursor()
+        if new_name:
+            db.execute("UPDATE employees SET NOM= ? WHERE NUMEMP=?", (new_name,crew_id))
+        if new_prenom:
+            db.execute("UPDATE employees SET prenom= ? WHERE NUMEMP=?", (new_prenom,crew_id))
+        if new_email:
+            db.execute("UPDATE employees SET email= ? WHERE NUMEMP=?", (new_email,crew_id))
+        if new_tel:
+            db.execute("UPDATE employees SET tel= ? WHERE NUMEMP=?", (new_tel,crew_id))
+        if new_ville:
+            db.execute("UPDATE employees SET ville= ? WHERE NUMEMP=?", (new_ville,crew_id))
+        if new_address:
+            db.execute("UPDATE employees SET adresse= ? WHERE NUMEMP=?", (new_address,crew_id))
+        if new_salaire:
+            db.execute("UPDATE employees SET salaire= ? WHERE NUMEMP=?", (new_salaire,crew_id))
+        if new_function:
+            db.execute("UPDATE employees SET FONCTION= ? WHERE NUMEMP=?", (new_function,crew_id))                     
         conn.commit()
+        conn.close()
+
+    def delete_employee(emp_id):
+        conn=Employee.get_db_connection()
+        db=conn.cursor()
+        db.execute("DELETE FROM employees WHERE NUMEMP=?", (emp_id,))
+        conn.commit()    
         conn.close()
         
-    def set_password_hash(self, employee_id, password_hash):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET password = ? WHERE NUMEMP = ?", (password_hash, employee_id))
-        conn.commit()
-        conn.close()
-
-    def set_phone(self, employee_id, phone):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET tel = ? WHERE NUMEMP = ?", (phone, employee_id))
-        conn.commit()
-        conn.close()
-
-    def set_address(self, employee_id, address):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET adresse = ? WHERE NUMEMP = ?", (address, employee_id))
-        conn.commit()
-        conn.close()
-
-    def set_salary(self, employee_id, salary):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET salaire = ? WHERE NUMEMP = ?", (salary, employee_id))
-        conn.commit()
-        conn.close()
-
-    def set_city(self, employee_id, city):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET ville = ? WHERE NUMEMP = ?", (city, employee_id))
-        conn.commit()
-        conn.close()
-
-    def set_function(self, employee_id, function):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("UPDATE employees SET FONCTION = ? WHERE NUMEMP = ?", (function, employee_id))
-        conn.commit()
-        conn.close()
-
-    def create(self, email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
-        conn=Employee.get_db_connection()
-        cursor=conn.cursor()
-        cursor.execute("""
-        INSERT INTO employees (email, password, NOM, prenom, tel, ville, adresse, salaire, FONCTION, datemb)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """, (email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb))
-        conn.commit()
-        conn.close()
-
 class FL_Employee(Employee):
     @staticmethod
     def get_employee_schedule(emp_id):
@@ -316,6 +176,7 @@ class FL_Employee(Employee):
         if row:
             return row
         return None
+    
     def get_NBTHV(self,id):
         conn=Employee.get_db_connection()
         cursor=conn.cursor()
@@ -340,12 +201,4 @@ class FL_Employee(Employee):
         conn.commit()
         conn.close()
 
-    def create(self, email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb):
-        super().create(email, password_hash, nom, prenom, tel, ville, adresse, salaire, fonction, datemb)
-        employee = self.get_by_email(email)
-        if employee:
-            employee_id = employee[0][0]
-            self.set_NBMHV(employee_id, 0)
-            self.set_NBTHV(employee_id, 0)
-        else:
-            raise ValueError(f"Employee with email {email} not found.")
+    

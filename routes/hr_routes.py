@@ -41,33 +41,30 @@ def hr():
     elif action == "create":
         context["view"] = "create"
         if request.method == "POST":
-            # Collect form data
             email = request.form.get("email")
             password = request.form.get("password")
-            nom = request.form.get("NOM")
+            nom = request.form.get("nom")
             prenom = request.form.get("prenom")
             tel = request.form.get("tel")
             ville = request.form.get("ville")
             adresse = request.form.get("adresse")
             salaire = request.form.get("salaire")
-            fonction = request.form.get("FONCTION")
+            fonction = request.form.get("fonction")
             datemb = request.form.get("datemb")
 
-            # Validate fields
             if not all([email, password, nom, prenom, tel, ville, adresse, salaire, fonction, datemb]):
                 context["error"] = "All fields are required!"
                 return render_template("hr.html", context=context)
 
-            # Create employee
-            Employee.create(email, password, nom, prenom, tel, ville, adresse, float(salaire), fonction, datemb)
+            Employee.create_employee(email,password,nom,prenom,tel,ville,adresse,salaire,fonction,datemb)
             return redirect(url_for('hr_routes.hr', action='list'))
 
     elif action == "update" and employee_id:
-        context["employee"] = Employee.get_by_id(employee_id)  # Fetch employee by ID
+        context["employee"] = Employee.get_by_id(employee_id) 
         context["view"] = "update"
         if request.method == "POST":
-            # Collect form data
-            nom = request.form.get("NOM")
+
+            nom = request.form.get("nom")
             prenom = request.form.get("prenom")
             email = request.form.get("email")
             tel = request.form.get("tel")
@@ -76,18 +73,10 @@ def hr():
             ville = request.form.get("ville")
             fonction = request.form.get("FONCTION")
 
-            # Update employee details
-            Employee.set_full_name(employee_id, nom, prenom)
-            Employee.set_email(employee_id, email)
-            Employee.set_phone(employee_id, tel)
-            Employee.set_address(employee_id, adresse)
-            Employee.set_salary(employee_id, float(salaire))
-            Employee.set_city(employee_id, ville)
-            Employee.set_function(employee_id, fonction)
+            Employee.update_employee(employee_id, nom, prenom, email, tel,ville ,adresse, salaire, fonction)
             return redirect(url_for('hr_routes.hr', action='details', id=employee_id))
 
     elif action == "delete" and employee_id and request.method == "POST":
-        Employee.delete(employee_id)  # Delete employee
+        Employee.delete_employee(employee_id)  # Delete employee
         return redirect(url_for('hr_routes.hr', action='list'))
-    print(context)  # Debugging the context
     return render_template('hr.html', **context)  # Render the template with context

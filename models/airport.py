@@ -17,7 +17,8 @@ class Airport:
     def get_airport_by_name(nom):
         conn=Airport.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM airport WHERE NOM = ?",(nom,))
+        query = "SELECT * FROM airport WHERE NOM LIKE ?"
+        cursor.execute(query,('%'+nom+'%',))
         row=cursor.fetchall()
         conn.close()
         if row:
@@ -88,7 +89,8 @@ class Airport:
     def get_airport_by_city(city):
         conn=Airport.get_db_connection()
         cursor=conn.cursor()
-        cursor.execute("SELECT * FROM airport WHERE VILLE = ?",(city,))
+        query="SELECT * FROM airport WHERE VILLE LIKE ?"
+        cursor.execute(query,('%'+city+'%',))
         rows =cursor.fetchall()
         if rows:
             return rows

@@ -40,7 +40,8 @@ class Aircraft:
     def get_by_name(name):
         conn = Aircraft.get_db_connection()
         cursor =conn.cursor()
-        cursor.execute("SELECT * FROM aircraft WHERE TYPE = ?",(name,))
+        query="SELECT * FROM aircraft WHERE TYPE LIKE ?"
+        cursor.execute(query,('%'+name+'%',))
         rows=cursor.fetchall()
         conn.close()
         if rows:
