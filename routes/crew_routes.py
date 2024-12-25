@@ -42,23 +42,18 @@ def crew():
             return redirect(url_for("crew_routes.crew", action="list"))
 
     elif action == "update" and crew_id:
+        new_nbthv=0
         context["crew_member"] = Crew.get_crew_by_id(crew_id)
         context["view"] = "update"
         if request.method == "POST":
             new_id = request.form.get("flight_id")
-            new_name=request.form.get("new_nom")
-            new_prenom=request.form.get("new_prenom")
-            new_email=request.form.get("new_email")
-            new_password=request.form.get("new_password")
-            new_tel=request.form.get("new_tel")
-            new_ville=request.form.get("new_ville")
-            new_address=request.form.get("new_adresse")
-            new_salaire=request.form.get("new_salaire")
             new_function=request.form.get("new_function")
-            new_datemb=request.form.get("new_datemb")
+            new_nbmhv=request.form.get("new_nbmhv")
+            if new_nbmhv:
+                new_nbthv=context["crew_member"][0][9] + int(new_nbmhv)
 
-            Crew.update_crew(crew_id, new_id,new_name,new_prenom,new_email,new_password,new_tel,new_ville,new_address,new_salaire,new_function,new_datemb)
-            return redirect(url_for("crew_routes.crew", action="list",id=crew_id))
+            Crew.update_crew(crew_id, new_id,new_function,new_nbmhv,new_nbthv)
+            return redirect(url_for("crew_routes.crew", action="details",id=crew_id))
 
     elif action == "delete" and crew_id and request.method == "POST":
         Crew.delete_crew(crew_id)

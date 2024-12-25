@@ -52,31 +52,18 @@ class Crew():
         conn.close()
 
     @staticmethod
-    def update_crew(crew_id, new_id,new_name,new_prenom,new_email,new_password,new_tel,new_ville,new_address,new_salaire,new_function,new_datemb):
+    def update_crew(crew_id, new_id,new_function,new_nbmhv,new_nbthv):
         conn=Crew.get_db_connection()
         db=conn.cursor()
         if new_id:
          db.execute("UPDATE employee_vol SET NUMVOL= ? WHERE NUMEMP=?", (new_id,crew_id))
-        if new_name:
-            db.execute("UPDATE employees SET NOM= ? WHERE NUMEMP=?", (new_name,crew_id))
-        if new_prenom:
-            db.execute("UPDATE employees SET prenom= ? WHERE NUMEMP=?", (new_prenom,crew_id))
-        if new_email:
-            db.execute("UPDATE employees SET email= ? WHERE NUMEMP=?", (new_email,crew_id))
-        if new_password:
-            db.execute("UPDATE employees SET password= ? WHERE NUMEMP=?", (new_password,crew_id))
-        if new_tel:
-            db.execute("UPDATE employees SET tel= ? WHERE NUMEMP=?", (new_tel,crew_id))
-        if new_ville:
-            db.execute("UPDATE employees SET ville= ? WHERE NUMEMP=?", (new_ville,crew_id))
-        if new_address:
-            db.execute("UPDATE employees SET adresse= ? WHERE NUMEMP=?", (new_address,crew_id))
-        if new_salaire:
-            db.execute("UPDATE employees SET salaire= ? WHERE NUMEMP=?", (new_salaire,crew_id))
         if new_function:
             db.execute("UPDATE employees SET FONCTION= ? WHERE NUMEMP=?", (new_function,crew_id))
-        if new_datemb:
-            db.execute("UPDATE employees SET datemb= ? WHERE NUMEMP=?", (new_datemb,crew_id))                           
+        if new_nbmhv:
+            db.execute("UPDATE employees SET NBMHV = ? WHERE NUMEMP = ?",(new_nbmhv,crew_id))    
+        if new_nbmhv:
+            db.execute("UPDATE employees SET NBTHV = ? WHERE NUMEMP = ?",(new_nbthv,crew_id))    
+                                                
         conn.commit()
         conn.close()
 

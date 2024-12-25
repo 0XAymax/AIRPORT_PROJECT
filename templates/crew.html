@@ -294,52 +294,18 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="new_nom">Name:</label>
-        <input type="text" id="new_nom" name="new_nom" class="form-control" value="{{context['crew_member'][0][2]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_prenom">Last name:</label>
-        <input type="text" id="new_prenom" name="new_prenom" class="form-control" value="{{context['crew_member'][0][3]}}">
-      </div>
-      <div class="form-group">
-        <label for="new_email">Email:</label>
-        <input type="text" id="new_email" name="new_email" class="form-control" value="{{context['crew_member'][0][4]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_password">Password:</label>
-        <input type="text" id="new_password" name="new_password" class="form-control" value="{{context['crew_member'][0][5]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_tel">Phone Number:</label>
-        <input type="text" id="new_tel" name="new_tel" class="form-control" value="{{context['crew_member'][0][6]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_ville">City:</label>
-        <input type="text" id="new_ville" name="new_ville" class="form-control" value="{{context['crew_member'][0][7]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_adresse">Adress:</label>
-        <input type="text" id="new_adresse" name="new_adresse" class="form-control" value="{{context['crew_member'][0][8]}}" >
-      </div>
-      <div class="form-group">
-        <label for="new_salaire">Salary:</label>
-        <input type="text" id="new_salaire" name="new_salaire" class="form-control" value="{{context['crew_member'][0][9]}}" >
-      </div>
-      <div class="form-group">
         <label for="new_function">Function:</label>
-        <input type="text" id="new_function" name="new_function" class="form-control" value="{{context['crew_member'][0][10]}}" >
+        <select id="new_function" name="new_function" class="form-control" >
+          <option value="" disabled selected>Select a Function</option>
+          <option value="Pilot">Pilot</option>
+          <option value="Flight Attendant">Flight Attendant</option>
+        </select>
       </div>
       <div class="form-group">
-        <label for="new_datemb">Hire Date:</label>
-        <input type="date" id="new_datemb" name="datemb" class="form-control date-picker" value="{{context['crew_member'][0][11]}}" >
+        <label for="new_nbmhv">NBMHV:</label>
+        <input id="new_nbmhv" name="new_nbmhv" class="form-control " value="{{context['crew_member'][0][8]}}">
       </div>
-      <div class="suggestions">
-        <ul id="date-suggestions">
-        </ul>
-      </div>  
-      <br>
-      <br>  
-
+      
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
