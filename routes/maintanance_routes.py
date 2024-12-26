@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.revision import Revision
-from models.aircraft import Aircraft
-from models.emloyee import Employee
+from AIRPORT_PROJECT.models.revision import Revision
+from AIRPORT_PROJECT.models.aircraft import Aircraft
+from AIRPORT_PROJECT.models.emloyee import Employee
 from datetime import datetime
 
 maintanance_routes = Blueprint('maintanance_routes', __name__)
@@ -9,6 +9,7 @@ maintanance_routes = Blueprint('maintanance_routes', __name__)
 @maintanance_routes.route('/maintanance', methods=["GET", "POST"])
 
 def maintenance():
+
     context = {}
     action = request.args.get("action", "list")
     aircraft_id = request.args.get("id", type=int)
@@ -17,6 +18,7 @@ def maintenance():
 
     try:
         if action == "list":
+            Revision.check_and_update_aircraft_status()
             # Get all aircraft needing maintenance
             context["aircrafts"] = Aircraft.get_by_status('ReqMaintenance')
             context["view"] = "list"

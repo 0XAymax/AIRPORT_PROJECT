@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models.emloyee  import Employee
+from AIRPORT_PROJECT.models.emloyee  import Employee
 
 # Create a blueprint
 hr_routes = Blueprint('hr_routes', __name__)

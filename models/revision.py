@@ -124,3 +124,34 @@ class Revision:
         rows = cursor.fetchall()
         conn.close()
         return rows  # Return rows with technician names
+
+    @staticmethod
+    def check_and_update_aircraft_status():
+        conn = Revision.get_db_connection()
+        cursor = conn.cursor()
+
+        # Query to find aircrafts that need maintenance
+        query = """
+        SELECT a.NUMAV, a.NBHDDREV, 
+               MAX(r.DATEREV) AS last_revision_date 
+        FROM aircraft a
+        LEFT JOIN revision r ON a.NUMAV = r.NUMAV
+        GROUP BY a.NUMAV
+        HAVING a.NBHDDREV >= 10000 OR 
+               (MAX(r.DATEREV) IS NOT NULL AND DATE(MAX(r.DATEREV)) <= DATE('now', '-6 months'))
+        """
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        # Update the status of aircrafts that meet the criteria
+        for row in results:
+            numav = row["NUMAV"]
+            cursor.execute("""
+                UPDATE aircraft 
+                SET status = 'ReqMaintenance' 
+                WHERE NUMAV = ?
+            """, (numav,))
+
+        conn.commit()
+        conn.close()

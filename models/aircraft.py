@@ -69,7 +69,7 @@ class Aircraft:
         if row:
             return row[0]
         return None
-    
+    @staticmethod
     def get_all_aircrafts():
         conn=Aircraft.get_db_connection()
         cursor=conn.cursor()

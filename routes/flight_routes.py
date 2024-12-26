@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request,Blueprint,redirect,url_for,jsonify
-from models.flight import Vol
+from AIRPORT_PROJECT.models.flight import Vol
 flight_routes=Blueprint("flight_routes",__name__)
 
 def get_aircraft_dropdown_data():

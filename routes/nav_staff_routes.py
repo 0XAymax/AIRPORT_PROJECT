@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from models.emloyee import FL_Employee
+from AIRPORT_PROJECT.models.emloyee import FL_Employee
 nav_staff_routes = Blueprint('nav_staff_routes', __name__)
 
 @nav_staff_routes.route('/schedule/<int:emp_id>', methods=["GET", "POST"])
